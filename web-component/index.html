@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web component example</title>
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+
+  <div id="app">
+    <h3>Hello world!</h3>
+    <user-card 
+      name="Jone Does"
+      avatar="https://randomuser.me/portraits/men/2.jpg">
+      <div slot="email">john@gmail.com</div>
+      <div slot="phone">444-444-4444</div>
+    </user-card>
+      <user-card 
+      name="Jane Does"
+      avatar="https://randomuser.me/portraits/women/2.jpg">
+      <div slot="email">jone@gmail.com</div>
+      <div slot="phone">555-555-5555</div>
+    </user-card>
+  </div>
+  <script src="./userCard.js"></script>
+</body>
+</html>
