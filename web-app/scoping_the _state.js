@@ -56,7 +56,7 @@ document.querySelector('#add_to_list').addEventListener('submit', function(event
   event.preventDefault();
   
   var item = document.querySelector('#list-item');
-  if (!item || !item.value) return;
+  if (!item || !item.value.length < 1) return;
   
   var items = lists.getData();
   items.listItems.push(item.value);
