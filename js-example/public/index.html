@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      height: 100vh;
+    }
+
+    .pass {
+      color: green;
+    }
+
+    .fail {
+      color: red;
+    }
+  </style>
+  <script>
+    // Assert function
+    function assert(value, desc) {
+      var li = document.createElement('li');
+      li.className = value ? 'pass' : 'fail';
+      li.appendChild(document.createTextNode(desc));
+      document.querySelector('.results').appendChild(li);
+    }
+
+    window.onload = function() {
+      assert(true, 'The test suit is running.');
+      assert(false, 'Fail!');
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <ul class="results"></ul>
+    <ul class="second"></div>
+  </div>
+<script src="../src/example.js"></script>
+</body>
+</html>
