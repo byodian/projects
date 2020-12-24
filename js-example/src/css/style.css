@@ -1,0 +1,35 @@
+body {
+  height: 100vh;
+}
+
+.pass {
+  color: green;
+}
+
+.fail {
+  color: red;
+}
+
+.report {
+  color: rgb(0, 26, 255);
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+#outerContainer {
+  width: 200px;
+  height: 200px;
+  background-color: red;
+}
+
+#innerContainer {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+}
