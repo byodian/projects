@@ -1,16 +1,18 @@
 {
-  "name": "moive-finder-teregram-bot",
+  "name": "nba-message-telegram-bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-telegram-bot-api": "^0.51.0",
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
     "telegraf": "^3.38.0"
   }
 }

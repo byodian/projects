@@ -1,27 +1,4 @@
 var app = {
-  addMessage: function(selector, message) {
-    var elem = document.querySelector(selector);
-    if (!elem) return;
-    
-    var li = document.createElement('li');
-    li.textContent = message;
-    elem.appendChild(li);
-  },
-  report: function(message) {
-    const results = document.querySelector('.results');
-    if (!results) return;
-
-    const li = document.createElement('li');
-    li.className = message ? 'report' : 'fail';
-    li.appendChild(document.createTextNode(message));
-    results.appendChild(li);
-  },
-  assert: function (value, desc) {
-    var li = document.createElement('li');
-    li.className = value ? 'pass' : 'fail';
-    li.appendChild(document.createTextNode(desc));
-    document.querySelector('.results').appendChild(li);
-  },
   firstHandler: function(event) {
     const results = document.querySelector('.results');
     if (!results) return;
@@ -30,9 +7,11 @@ var app = {
       results.removeChild(results.lastChild);
     }
   },
+
   secondHandler: function(event) {
     console.log(event.type);
   },
+
   generateTable: function() {
     const rowCount = 20000;
     const divideInto = 4;
@@ -59,6 +38,7 @@ var app = {
 
     }, 0);
   },
+  
   elems: {
     second: '.second',
     firstButton: '#firstButton',
@@ -81,13 +61,15 @@ const outerContainer = document.querySelector(app.elems.outerContainer);
 const innerContainer = document.querySelector(app.elems.innerContainer);
 
 outerContainer.addEventListener('click', function(event) {
-  app.report('OuterContainer handler: capture');
-  app.assert(this === outerContainer, "This referes to the outerContainer");
-  app.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
-}, true)
+  testApp.report('OuterContainer handler: capture');
+  testApp.assert(this === outerContainer, "This referes to the outerContainer");
+  testApp.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
+}, false)
 
 innerContainer.addEventListener('click', function(event) {
-  app.report('innerContainer handler: bubble');
-  app.assert(this === innerContainer, "This referes to the innerContainer");
-  app.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
+  testApp.report('innerContainer handler: bubble');
+  testApp.assert(this === innerContainer, "This referes to the innerContainer");
+  testApp.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
 })
+
+

@@ -14,14 +14,6 @@ body {
   color: rgb(0, 26, 255);
 }
 
-ul {
-  padding: 0;
-}
-
-li {
-  list-style: none;
-}
-
 #outerContainer {
   width: 200px;
   height: 200px;
