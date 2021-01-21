@@ -20,8 +20,14 @@ var testApp = {
 
   assert: function (value, desc) {
     var li = document.createElement('li');
+    var results = document.querySelector('.results');
+    if(!results) {
+      console.error('Not found a results element');
+      return;
+    }
     li.className = value ? 'pass' : 'fail';
     li.appendChild(document.createTextNode(desc));
-    document.querySelector('.results').appendChild(li);
+    
+    results.appendChild(li);
   },
 };

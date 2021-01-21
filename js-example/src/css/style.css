@@ -8,6 +8,7 @@ body {
 
 .fail {
   color: red;
+  text-decoration: line-through;
 }
 
 .report {
@@ -24,4 +25,12 @@ body {
   width: 100px;
   height: 100px;
   background-color: green;
+}
+
+.box {
+  width: 400px;
+  height: 400px;
+}
+#box1 {
+  position: relative;
 }

@@ -61,15 +61,15 @@ const outerContainer = document.querySelector(app.elems.outerContainer);
 const innerContainer = document.querySelector(app.elems.innerContainer);
 
 outerContainer.addEventListener('click', function(event) {
-  testApp.report('OuterContainer handler: capture');
-  testApp.assert(this === outerContainer, "This referes to the outerContainer");
-  testApp.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
+  report('OuterContainer handler: capture');
+  assert(this === outerContainer, "This referes to the outerContainer");
+  assert(event.target === innerContainer, 'event.target referes to the innerContainer');
 }, false)
 
 innerContainer.addEventListener('click', function(event) {
-  testApp.report('innerContainer handler: bubble');
-  testApp.assert(this === innerContainer, "This referes to the innerContainer");
-  testApp.assert(event.target === innerContainer, 'event.target referes to the innerContainer');
+  report('innerContainer handler: bubble');
+  assert(this === innerContainer, "This referes to the innerContainer");
+  assert(event.target === innerContainer, 'event.target referes to the innerContainer');
 })
 
 

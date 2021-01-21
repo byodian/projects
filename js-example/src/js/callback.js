@@ -1,19 +1,19 @@
 var text = 'Domo arigato!'
-testApp.report('Before defining functions')
+report('Before defining functions')
 
 function useless(ninjaCallback) {
-  testApp.report('In useless function')
+  report('In useless function')
   return ninjaCallback()
 }
 
 function getText() {
-  testApp.report('In getText function');
+  report('In getText function');
   return text;
 }
 
-testApp.report('Before makinga all the calls');
-testApp.assert(useless(getText) === text, 'The useless function workd! ' + text);
-testApp.report('After the calls have been made!');
+report('Before makinga all the calls');
+assert(useless(getText) === text, 'The useless function workd! ' + text);
+report('After the calls have been made!');
 
 var values = [0, 3, 2, 5, 7, 4, 8, 1];
 values.sort(function(a, b) {
@@ -39,8 +39,8 @@ var store = {
 }
 
 function ninja(){};
-testApp.assert(store.add(ninja), 'Function was safely added.');
-testApp.assert(!store.add(ninja), 'But it was only added once.');
+assert(store.add(ninja), 'Function was safely added.');
+assert(!store.add(ninja), 'But it was only added once.');
 
 // self-memoizing functions
 function isPrime(value) {
@@ -63,14 +63,14 @@ function isPrime(value) {
   return isPrime.answer[value] = prime;
 } 
 
-testApp.assert(isPrime(5), '5 is prime!');
-testApp.assert(isPrime.answer[5], 'The answer was cached!');
+assert(isPrime(5), '5 is prime!');
+assert(isPrime.answer[5], 'The answer was cached!');
 
 function ninja() {
   return this;
 }
 
-testApp.assert(ninja() === window, "In a 'nostrict' ninja function" + "the context is the global window object");
+assert(ninja() === window, "In a 'nostrict' ninja function" + "the context is the global window object");
 
 // 构造函数
 // 1. 创建一个新对象
@@ -87,8 +87,8 @@ var ninja2 = new Ninja();
 // 1. ninja -> {}
 // 2. ninja -> this
 // 3. return ninja
-testApp.assert(ninja1.skulk() === ninja1, 'The 1st ninja is skulking');
-testApp.assert(ninja2.skulk() === ninja2, 'The 2nd ninja is skulking');
+assert(ninja1.skulk() === ninja1, 'The 1st ninja is skulking');
+assert(ninja2.skulk() === ninja2, 'The 2nd ninja is skulking');
 
 // 构造函数有返回值结果会如何
 
@@ -100,12 +100,12 @@ function Ninja1() {
   return 123;
 }
 
-testApp.assert(Ninja1() === 123, 'Return value honored when not called as a constructor');
+assert(Ninja1() === 123, 'Return value honored when not called as a constructor');
 
 var ninja3 = new Ninja1();
 
-testApp.assert(typeof ninja3 === 'object', 'Object returned when called as a constructor');
-testApp.assert(typeof ninja3.skulk === 'function', 'ninja object has a skulk method');
+assert(typeof ninja3 === 'object', 'Object returned when called as a constructor');
+assert(typeof ninja3.skulk === 'function', 'ninja object has a skulk method');
 
 
 var puppet = {
@@ -121,6 +121,58 @@ function Ninja2() {
 }
 var ninja4 = new Ninja2();
 
-testApp.assert(ninja4 === puppet, 'The ninja4 is merely a puppet!');
-testApp.assert(ninja4.rules === false, 'The puppet does not how to rules!');
+assert(ninja4 === puppet, 'The ninja4 is merely a puppet!');
+assert(ninja4.rules === false, 'The puppet does not how to rules!');
 
+
+function juggle() {
+  var result = 0;
+  for(var n = 0; n < arguments.length; n++) {
+    result += arguments[n];
+  }
+
+  this.result = result;
+}
+
+var ninja5 = {};
+var ninja6 = {};
+
+juggle.apply(ninja5, [1,2,3,4,5]);
+juggle.call(ninja6, 1,2,3,4,5);
+
+assert(ninja5.result === 15, 'juggled via apply');
+assert(ninja6.result === 15, 'juggled via call');
+
+function isArray(obj) {
+  if(!Array.isArray(obj)) {
+    console.error('The first argument is not a array');
+    return;
+  }
+}
+
+function isFunction(fn) {
+  if(typeof fn !== 'function') {
+    console.log('The second argument is note a function');
+    return;
+  }
+}
+
+function forEach(list, callback) {
+  isArray(list);
+  isFunction(callback);
+  
+  for (var n = 0; n < list.length; n++) {
+    console.log(list[n]);
+    callback.call(list[n], n);
+  }
+}
+
+var weapons = [
+  { type: 'shuriken'},
+  { type: 'katana'},
+  { type: 'nunchucks'}
+]
+
+forEach(weapons, function(index) {
+  assert(this === weapons[index], "Got the expected value of " + weapons[index].type);
+})

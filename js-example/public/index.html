@@ -6,17 +6,16 @@
   <title>Document</title>
   <link rel="stylesheet" href="../src/css/style.css">
   <script>
-    var testApp = {
-      addMessage: function(selector, message) {
+      var addMessage = function(selector, message) {
         var elem = document.querySelector(selector);
         if (!elem) return;
         
         var li = document.createElement('li');
         li.textContent = message;
         elem.appendChild(li);
-      },
+      };
 
-      report: function(message) {
+      var report = function(message) {
         const results = document.querySelector('.results');
         if (!results) return;
 
@@ -24,15 +23,15 @@
         li.className = message ? 'report' : 'fail';
         li.appendChild(document.createTextNode(message));
         results.appendChild(li);
-      },
+      }
 
-      assert: function (value, desc) {
+      var assert = function (value, desc) {
         var li = document.createElement('li');
         li.className = value ? 'pass' : 'fail';
         li.appendChild(document.createTextNode(desc));
         document.querySelector('.results').appendChild(li);
-      },
-    };
+      };
+
   </script>
 </head>
 <body>
@@ -43,9 +42,15 @@
       <div id="innerContainer"></div>
     </div>
     <ul class="results"></ul>
+    <button id="test">Click Me!</button>
+    
+   <div class="box">
+     <div id="box1">First Box</div>
+    </div>
   </div>
 
 <script src="../src/js/example.js"></script>
 <script src="../src/js/callback.js"></script>
+<script src="../src/js/arrow.js"></script>
 </body>
 </html>
