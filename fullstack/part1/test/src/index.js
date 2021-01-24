@@ -1,28 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const Hello = (props) => {
-  console.log(props);
+const Hello = ({ name, age }) => {
+  const bornYear = () => new Date().getFullYear() - age;
+
   return (
     <>
-      <p>Hello {props.name}, you are {props.age} years old.</p>
+      <p>Hello {name}, you are {age} years old.</p>
+      <p>So you were probably born in {bornYear()}</p>
     </>
   );
 }
 
-const App = () => {
-  const name = 'Peter';
-  const age = 10;
+const App = (props) => {
+  const { counter } = props;
 
   return (
     <div>
-      <Hello name={name} age={age} />
-      <Hello name="byodian" age={12 + 10} />
+      <Hello name="byodian" age={13 + 13} />
+      <div>{counter}</div>
     </div>
   )
 };
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+let counter = 1;
+
+const refresh = () => {
+  ReactDOM.render(
+    <App counter={counter} />,
+    document.getElementById('root')
+  );
+}
+
+setInterval(()=> {
+  refresh();
+  counter += 1;
+}, 1000)
