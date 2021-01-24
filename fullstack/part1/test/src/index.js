@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Calculator  } from "./Component/Calculator";
 
 const Hello = ({ name, age }) => {
   const bornYear = () => new Date().getFullYear() - age;
@@ -12,27 +13,31 @@ const Hello = ({ name, age }) => {
   );
 }
 
-const App = (props) => {
-  const { counter } = props;
+const Display = ({ counter }) => <div>{counter}</div>
+
+const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
+
+const App = () => {
+  const [ counter, setCounter ] = useState(0);
+
+  const increaseByOne = () => setCounter(counter + 1);
+  const descreaseByOne = () => setCounter(counter - 1);
+  const setToZero = () => setCounter(0);
 
   return (
     <div>
       <Hello name="byodian" age={13 + 13} />
-      <div>{counter}</div>
+      <Display counter={counter} />
+      <Button handleClick={increaseByOne} text="plus" />
+      <Button handleClick={descreaseByOne} text="minus" />
+      <Button handleClick={setToZero} text="zero" />
+      <Calculator />
     </div>
   )
 };
 
-let counter = 1;
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
 
-const refresh = () => {
-  ReactDOM.render(
-    <App counter={counter} />,
-    document.getElementById('root')
-  );
-}
-
-setInterval(()=> {
-  refresh();
-  counter += 1;
-}, 1000)
