@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Calculator  } from "./Component/Calculator";
+import { ComplexState} from "./Component/ComplexState";
 
 const Hello = ({ name, age }) => {
   const bornYear = () => new Date().getFullYear() - age;
@@ -32,6 +33,7 @@ const App = () => {
       <Button handleClick={descreaseByOne} text="minus" />
       <Button handleClick={setToZero} text="zero" />
       <Calculator />
+      <ComplexState />
     </div>
   )
 };
