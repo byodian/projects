@@ -20,6 +20,11 @@ const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</
 
 const App = () => {
   const [ counter, setCounter ] = useState(0);
+  const [ value, setValue ] = useState(0);
+  
+   const setToValue = (newValue) => () => {
+    setValue(newValue);
+  }
 
   const increaseByOne = () => setCounter(counter + 1);
   const descreaseByOne = () => setCounter(counter - 1);
@@ -27,6 +32,12 @@ const App = () => {
 
   return (
     <div>
+      <div>
+        <p>{value}</p>
+        <Button handleClick={setToValue(10)} text="Ten" />
+        <Button handleClick={setToValue(0)} text="Reset" />
+        <Button handleClick={setToValue(value + 1)} text="Increase" />
+      </div>
       <Hello name="byodian" age={13 + 13} />
       <Display counter={counter} />
       <Button handleClick={increaseByOne} text="plus" />
