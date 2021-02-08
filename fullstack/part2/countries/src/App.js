@@ -3,6 +3,8 @@ import axios from 'axios';
 import CountriesForm from './componetns/CountriesForm';
 import SearchResult from './componetns/SearchReault';
 
+const REACT_APP_API_KEY = '15b62304600f0661bdc5fd946e4c6f3e';
+
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState('');
@@ -16,6 +18,12 @@ const App = () => {
         setCountries(response.data);
       })
   }, []);
+
+  const getWeather = async function (query) {
+    const response = await axios.get(`http://api.weatherstack.com/current?access_key=${REACT_APP_API_KEY}&query=${query}`);
+    const weather = await response.data;
+    return weather;
+  };
 
   const countriesToShow = countries.filter(country => 
     country.name
@@ -41,6 +49,7 @@ const App = () => {
         handleClick={handleClick}
         showDetail={showDetail}
         country={country}
+        getWeather={getWeather}
       />
     </div>
   )
