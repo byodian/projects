@@ -14,7 +14,7 @@ const WarningMessage = ({ text }) => (
   <p>{text}</p>
 );
 
-const SearchResult= ({ countries, handleClick, showDetail, country, getWeather }) => {
+const SearchResult= ({ countries, handleClick, showDetail, country, weather }) => {
   const len = countries.length;
   const text = len > 10 
     ? `Too many countries (${len} countries), specify another filter.`
@@ -24,25 +24,16 @@ const SearchResult= ({ countries, handleClick, showDetail, country, getWeather }
     return (
       <CountryDetail 
         country={country}
-        weather={getWeather(country.capital).then(response => response.data)}
+        // weather={weather}
       />
     );
   }
 
-  if (len <= 10 && len > 1 && !showDetail) {
+  if (len <= 10 && len >= 1 && !showDetail) {
     return (
       <CountriesList 
         countries={countries} 
         handleClick={handleClick}
-      />
-    );
-  } else if (len === 1) {
-    const country = countries[0];
-
-    return (
-      <CountryDetail 
-        country={country} 
-        weather={getWeather(country.capital)}
       />
     );
   } else {

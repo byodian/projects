@@ -1,4 +1,4 @@
-const CountriesForm = ({ value, handleChange}) => (
+const SearchForm = ({ value, handleChange}) => (
   <div>
     <form>
         find countries <input value={value} onChange={handleChange}/>
@@ -6,4 +6,4 @@ const CountriesForm = ({ value, handleChange}) => (
   </div>
 )
 
-export default CountriesForm;
+export default SearchForm;

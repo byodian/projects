@@ -1,7 +1,5 @@
-
-const CountryDetail = ({ country, weather }) => {
+const CountryDetail = ({ country}) => {
   const { name, capital, population, languages } = country;
-  const { current, location, request, } = weather;
 
   return (
     <div>
@@ -15,12 +13,12 @@ const CountryDetail = ({ country, weather }) => {
       <picture>
         <img src={country.flag} alt="country_flag"/>
       </picture>
-      <h3>Weather in {capital}</h3>
+      {/* <h3>Weather in {capital}</h3>
       <p><strong>temperature: </strong>{current.temperature} Celcius</p>
       <picture>
-        <img src={current.weather_icons[0]} alt="weather icon"/>
+        <img src={current.weather_icons[0]} alt="weather icon" style={{width: 50 + 'px'}} />
       </picture>
-      <p>{current.wind_speed} mph direction {current.wind_dir}</p>
+      <p>{current.wind_speed} mph direction {current.wind_dir}</p> */}
     </div>
   )
 }
