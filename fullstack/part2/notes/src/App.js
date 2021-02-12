@@ -1,19 +1,24 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Note from './componets/Note';
-import noteService from "./services/note";
+import noteService from './services/note';
+import Notification from './componets/Notification';
+import Footer from './componets/Footer';
 import './index.css';
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('a new note...');
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
       noteService
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes);
+      })
+      .catch(() => {
+        setErrorMessage('The service doesn\'t work')
       })
   }, []);
 
@@ -25,7 +30,7 @@ const App = (props) => {
     event.preventDefault();
     if (newNote === '') {
       alert('Please add a note');
-      return;
+      return null;
     }
     const noteObject= {
       content: newNote,
@@ -46,7 +51,7 @@ const App = (props) => {
     setNewNote(event.target.value);
   }
 
-  const toggleImportanceOf = (id) => {
+  const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id);
     const changeNote = { ...note, important: !note.important };
 
@@ -55,10 +60,13 @@ const App = (props) => {
       .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote));
       })
-      .catch(error => {
-        alert(
-          `the note ${note.content} was already deleted from server`
-        )
+      .catch(() => {
+        setErrorMessage(
+          `Note "${note.content}" was already deleted from server`
+        );
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
         setNotes(notes.filter(n => n.id !== id));
       })
   }
@@ -66,6 +74,7 @@ const App = (props) => {
 	return (
 		<div>
       <h1>Notes</h1>
+      <Notification message={errorMessage}/>
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
@@ -87,6 +96,7 @@ const App = (props) => {
         />
         <button type="submit">Add</button>
       </form>
+      <Footer />
 		</div>
 	);
 }

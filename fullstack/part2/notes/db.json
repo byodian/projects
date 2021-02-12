@@ -27,19 +27,19 @@
     {
       "content": "a new note",
       "date": "2021-02-09T00:42:22.791Z",
-      "important": false,
+      "important": true,
       "id": 5
     },
     {
       "content": "You are the apple of my life",
       "date": "2021-02-09T00:57:39.059Z",
-      "important": false,
+      "important": true,
       "id": 6
     },
     {
       "content": "You are the apples of my life",
       "date": "2021-02-12T03:45:57.288Z",
-      "important": false,
+      "important": true,
       "id": 7
     }
   ]

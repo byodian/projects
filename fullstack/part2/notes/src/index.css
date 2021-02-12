@@ -29,3 +29,20 @@ button {
   margin-left: 2px;
   padding: 2px;
 }
+
+h1 {
+  margin-top: 0;
+  color: green;
+}
+
+.note {
+  line-height: 1.5;
+}
+
+.error {
+  font-size: 20px;
+  border: 3px solid red;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
