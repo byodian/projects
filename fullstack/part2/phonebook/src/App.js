@@ -3,13 +3,16 @@ import Filter from './componets/Filter';
 import PersonForm from './componets/PersonForm';
 import Persons from './componets/Persons';
 import personsServices from './services/persons'
-import axios from 'axios';
+import Notification from "./componets/Notification";
+import './index.css';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filter, setFilter ] = useState('');
+  const [ warnMessage, setWarnMessage ] = useState(null);
+  const [ warnClassName, setWarnClassName ] = useState('');
 
   useEffect(() => {
     personsServices
@@ -18,6 +21,15 @@ const App = () => {
         setPersons(initialPersons);
       })
   }, []);
+
+  const warnMessageFn = (message, name, timer = 5000) => {
+    setWarnMessage(message)
+    setWarnClassName(name);
+
+    setTimeout(() => {
+      setWarnMessage(null);
+    }, timer);
+  }
 
   const updatePerson = (person) => {
     const message = `${person.name} is already added to phonebook, replac the old number with a new one?`;
@@ -32,6 +44,11 @@ const App = () => {
           setPersons(persons.map(person => person.id !== id ? person : returnedPerson));
           setNewName('');
           setNewNumber('');
+        })
+        .catch(() => {
+          const message = `Infomation of ${person.name} has already been removed from server`;
+          warnMessageFn(message, 'fail');
+          setPersons(persons.filter(p => p.id !== id));
         })
     }
   }
@@ -57,10 +74,11 @@ const App = () => {
 
       personsServices
         .create(newPerson)
-        .then(returnedPersons => {
-          setPersons(persons.concat(returnedPersons));
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
+          warnMessageFn(`Added ${returnedPerson.name}`, 'pass');
         })
     } else {
       updatePerson(person);
@@ -78,13 +96,19 @@ const App = () => {
     fn(event.target.value);
   }
 
-  const handleClick = (name, id) => {
+  const handleDeleteClick = (name, id) => {
     if (window.confirm(`Delete ${name}?`)) {
       personsServices
         .remove(id)
-        .then(returnedPersons => {
-          setPersons(returnedPersons);
-        });
+        .then(returnedPerson => {
+          setPersons(returnedPerson);
+          warnMessageFn('Deleted successfully', 'pass');
+        })
+        .catch(() => {
+          const message = `Information of ${name} has already been removed from server`;
+          warnMessageFn(message, 'fail');
+          setPersons(persons.filter(p => p.id !== id));
+        })
     }
   }
 
@@ -100,6 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={warnMessage} className={warnClassName} />
       <Filter 
         filter={filter} 
         handleChange={handleChange(setFilter)}
@@ -109,7 +134,7 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons 
         persons={personsToShow}
-        handleClick={handleClick}
+        handleClick={handleDeleteClick}
       />
     </div>
   );

@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#root {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.warning {
+  border-style: solid;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.pass {
+  color: green;
+}
+
+.fail {
+  color: red;
+}
