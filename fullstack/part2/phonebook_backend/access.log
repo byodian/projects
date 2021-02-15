@@ -1,0 +1,7 @@
+GET /api/persons 200 223 - 6.204 ms
+GET /api/persons 200 223 - 0.471 ms
+POST /api/persons 200 49 - 8.713 ms
+GET /api/persons 223 - 2.963 ms {}
+GET /api/persons 223 - 4.682 ms -
+GET /api/persons 223 - 3.417 ms No response body
+POST /api/persons 49 - 0.463 ms {"name":"byodian","number":"12-1222-2222"}

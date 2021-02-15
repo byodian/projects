@@ -1,17 +1,25 @@
 const express = require("express");
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 
-const requestLogger = (request, response, next) => {
-  console.log('Method: ', request.method);
-  console.log('Path: ', request.path);
-  console.log('Body: ', request.body);
-  console.log(request);
-  console.log('____');
-  next();
-}
+const accessLogStrem = fs.createWriteStream(
+  path.join(__dirname, 'access.log'), { flags: 'a'}
+);
+
+morgan.token('body', function(req, res) {
+  const body = JSON.stringify(req.body);
+  return body.length > 2 ? body : 'No response body';
+});
+
+const custom = ':method :url :res[content-length] - :response-time ms :body';
 
 app.use(express.json());
-app.use(requestLogger);
+app.use(morgan(`${custom}`, {
+  stream: accessLogStrem
+}));
 
 let persons = [
   {
@@ -51,7 +59,6 @@ const generateId = (persons) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-  console.log(body);
 
   if (!body.name || !body.number) {
     return response.status(404).json({
