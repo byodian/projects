@@ -17,6 +17,7 @@ const custom = ':method :url :res[content-length] - :response-time ms :body';
 
 app.use(express.json());
 app.use(setHeaders);
+app.use(express.static('build'));
 app.use(morgan(`${custom}`));
 
 let persons = [
