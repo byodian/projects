@@ -33,10 +33,9 @@ const App = () => {
 
   const updatePerson = (person) => {
     const message = `${person.name} is already added to phonebook, replac the old number with a new one?`;
-    
     if (person && window.confirm(message)) {
-      const changedPerson = { ...person, number: newNumber };
       const id = person.id;
+      const changedPerson = { ...person, number: newNumber };
 
       personsServices
         .update(id, changedPerson)
@@ -53,6 +52,7 @@ const App = () => {
     }
   }
 
+  // Check inputs fields
   const isEmpty = () => {
     if (newName === '' || newNumber === '') {
       alert("These inputs can't be empty.");
@@ -63,9 +63,8 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     isEmpty();
-
+    // If person doesn't exist, then POST it into server.
     const person = persons.find(person => person.name === newName);
-    
     if (!person) {
       const newPerson = {
         name: newName,
@@ -81,6 +80,7 @@ const App = () => {
           warnMessageFn(`Added ${returnedPerson.name}`, 'pass');
         })
     } else {
+      // Using PUT method
       updatePerson(person);
     }
   }
@@ -123,15 +123,15 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
       <Notification message={warnMessage} className={warnClassName} />
       <Filter 
         filter={filter} 
         handleChange={handleChange(setFilter)}
       />
-      <h3>add a new</h3>
+      <h2>Add a new person</h2>
       <PersonForm o={formProps} />
-      <h3>Numbers</h3>
+      <h2>Numbers</h2>
       <Persons 
         persons={personsToShow}
         handleClick={handleDeleteClick}

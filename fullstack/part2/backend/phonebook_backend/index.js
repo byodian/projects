@@ -1,25 +1,23 @@
 const express = require("express");
 const morgan = require('morgan');
-const fs = require('fs');
-const path = require('path');
-
 const app = express();
 
-const accessLogStrem = fs.createWriteStream(
-  path.join(__dirname, 'access.log'), { flags: 'a'}
-);
+const setHeaders = (request, response, next) => {
+  response.set('Access-Control-Allow-Origin', '*');
+  response.set('Access-Control-Allow-Methods', 'DELETE,PUT,PATCH');
+  response.set('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}
 
 morgan.token('body', function(req, res) {
   const body = JSON.stringify(req.body);
   return body.length > 2 ? body : 'No response body';
 });
-
 const custom = ':method :url :res[content-length] - :response-time ms :body';
 
 app.use(express.json());
-app.use(morgan(`${custom}`, {
-  stream: accessLogStrem
-}));
+app.use(setHeaders);
+app.use(morgan(`${custom}`));
 
 let persons = [
   {
@@ -77,7 +75,6 @@ app.post('/api/persons', (request, response) => {
     name: body.name,
     number: body.number,
   }
-
   persons = persons.concat(person);
 
   response.json(person);
@@ -94,16 +91,32 @@ app.get('/info', (request, response) => {
   response.send(makeup(persons));
 })
 
-app.get('/api/persons/:id', (request, response) => {
+const getSinglePerson = (request, response) => {
   const id = Number(request.params.id);
   const person = persons.find(p => p.id === id);
-
   if (!person) {
     return response.status(404).end();
   }
 
   response.json(person);
-})
+}
+
+const setPerson = (request, response) => {
+  const body = request.body;
+  const id = Number(request.params.id);
+
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: id
+  }
+  
+  persons = persons.map(person => person.id !== id ? person : newPerson);
+  response.json(newPerson);
+}
+
+app.get('/api/persons/:id', getSinglePerson);
+app.put('/api/persons/:id', setPerson);
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
@@ -111,7 +124,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 })
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 })
