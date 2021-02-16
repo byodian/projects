@@ -11,6 +11,7 @@ const setHeaders = (request, response, next) => {
 
 app.use(express.json());
 app.use(setHeaders);
+app.use(express.static('build'));
 
 let notes = [
   {
