@@ -12,7 +12,7 @@ const App = (props) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-      noteService
+    noteService
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes);
@@ -32,11 +32,10 @@ const App = (props) => {
       alert('Please add a note');
       return null;
     }
+
     const noteObject= {
       content: newNote,
-      date: new Date().toISOString(),
       important: Math.random() < 0.5,
-      id: notes.length + 1,
     }
 
     noteService
