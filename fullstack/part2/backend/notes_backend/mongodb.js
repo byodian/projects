@@ -23,27 +23,27 @@ const noteSchema = new mongoose.Schema({
 })
 
 const Note = mongoose.model('Note', noteSchema);
-console.log(Note);
+console.log(noteSchema.path('content'));
 
-const note = new Note({
-  content: 'HTML is Easy',
-  date: new Date(),
-  important: true,
-})
 
-// Note.find({}).then(result => {
-//   result.forEach(note => {
-//     console.log(note);
-//   })
-//   db.close();
+// const note = new Note({
+//   content: 'HTML is Easy',
+//   date: new Date(),
+//   important: true,
 // })
 
+Note.find({}).then(result => {
+  result.forEach(note => {
+    console.log(note);
+  })
+  db.close();
+})
 
-note.save()
-  .then(result => {
-    console.log('note saved!');
-    mongoose.connection.close();
-  })
-  .catch(error => {
-    console.log(error);
-  })
+// note.save()
+//   .then(result => {
+//     console.log('note saved!');
+//     mongoose.connection.close();
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   })
