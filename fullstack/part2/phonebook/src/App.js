@@ -65,7 +65,7 @@ const App = () => {
     isEmpty();
     // If person doesn't exist, then POST it into server.
     const person = persons.find(person => person.name === newName);
-    if (!person) {
+    if (person === undefined) {
       const newPerson = {
         name: newName,
         number: newNumber
@@ -79,8 +79,11 @@ const App = () => {
           setNewNumber('');
           warnMessageFn(`Added ${returnedPerson.name}`, 'pass');
         })
+        .catch(error => {
+          console.log(error.message);
+        })
     } else {
-      // Using PUT method
+      // If person exists, then put it into service
       updatePerson(person);
     }
   }

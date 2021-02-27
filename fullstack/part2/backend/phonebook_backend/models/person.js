@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
 
-if (process.argv.length < 4) {
-  console.log('Please provide the password as an argument: node mongo.js <name> <number>');
-  process.exit(1);
-}
-
 const url = process.env.MONGODB_URL;
 
 const options = {
@@ -14,17 +9,25 @@ const options = {
   useCreateIndex: true,
 };
 
-mongoose.connect(url, options);
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console,'connection error'));
-db.once('open', () => {
-  console.log("We're connected");
-})
-
+mongoose.connect(url, options)
+  .then(result => {
+    console.log('MongoDB is connected');
+  })
+  .catch(error => {
+    console.log(error.message);
+  })
+  
 const personSchema = new mongoose.Schema({
   name: String,
   number: String
 });
+
+personSchema.set('toJSON', {
+  transform: (doc, returnedObject) => {
+    returnedObject.id = returnedObject._id;
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  }
+})
 
 module.exports =  mongoose.model('Person', personSchema);
