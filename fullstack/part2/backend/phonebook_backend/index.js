@@ -1,6 +1,18 @@
+require('dotenv').config();
 const express = require("express");
 const morgan = require('morgan');
 const app = express();
+const Person = require('./models/person');
+
+const person = new Person({
+  name: process.argv[3],
+  number: process.argv[4]
+})
+
+person.save().then(result => {
+  console.log(`added ${process.argv[3]} ${process.argv[4]} to phonebook`);
+  db.close();
+})
 
 const setHeaders = (request, response, next) => {
   response.set('Access-Control-Allow-Origin', '*');

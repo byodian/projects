@@ -29,7 +29,7 @@ const App = (props) => {
   const addNotes = (event) => {
     event.preventDefault();
     if (newNote === '') {
-      alert('Please add a note');
+      alert("The note input can't be empty.");
       return null;
     }
 
@@ -63,9 +63,11 @@ const App = (props) => {
         setErrorMessage(
           `Note "${note.content}" was already deleted from server`
         );
+
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
+
         setNotes(notes.filter(n => n.id !== id));
       })
   }
