@@ -16,6 +16,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id'});
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.message });
   }
 
   next(error);
@@ -36,7 +38,7 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({})
     .then(persons => {
       response.json(persons);
@@ -49,7 +51,7 @@ const generateId = (persons) => {
   return maxId + 1;
 };
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -77,10 +79,13 @@ const makeup = (persons) => {
   `;
 }
 
-app.get('/info', (request, response) => {
-  Person.find({}).then(persons => {
-    response.send(makeup(persons));
-  })
+app.get('/info', (request, response, next) => {
+  Person
+    .find({})
+    .then(persons => {
+      response.send(makeup(persons));
+    })
+    .catch(error => next(error));
 })
 
 const setPerson = (request, response, next) => {
@@ -100,7 +105,7 @@ const setPerson = (request, response, next) => {
 
 app.put('/api/persons/:id', setPerson);
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {

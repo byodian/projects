@@ -64,7 +64,6 @@ const App = () => {
     event.preventDefault();
     isEmpty();
     const person = persons.find(person => person.name === newName);
-    console.log(person);
     
     // If person doesn't exist, then POST it into server.
     if (person === undefined) {
@@ -82,7 +81,8 @@ const App = () => {
           warnMessageFn(`Added ${returnedPerson.name}`, 'pass');
         })
         .catch(error => {
-          console.log(error.message);
+          console.dir(error);
+          warnMessageFn(`${error.response.data.error}`, 'fail');
         })
     } else {
       // If person exists, then put it into service
