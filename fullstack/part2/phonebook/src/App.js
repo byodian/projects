@@ -40,7 +40,7 @@ const App = () => {
       personsServices
         .update(id, changedPerson)
         .then(returnedPerson => {
-          setPersons(persons.map(person => person.id !== id ? person : returnedPerson));
+          setPersons(persons.map(p => p.id !== id ? p : returnedPerson));
           setNewName('');
           setNewNumber('');
         })
@@ -55,7 +55,7 @@ const App = () => {
   // Check inputs fields
   const isEmpty = () => {
     if (newName === '' || newNumber === '') {
-      alert("These inputs can't be empty.");
+      alert("Name or Number input field can't be empty.");
       return;
     };
   }
@@ -63,8 +63,10 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     isEmpty();
-    // If person doesn't exist, then POST it into server.
     const person = persons.find(person => person.name === newName);
+    console.log(person);
+    
+    // If person doesn't exist, then POST it into server.
     if (person === undefined) {
       const newPerson = {
         name: newName,
