@@ -17,7 +17,7 @@ mongoose.connect(url, options)
   .catch(error => {
     console.log(error.message);
   });
-  
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,

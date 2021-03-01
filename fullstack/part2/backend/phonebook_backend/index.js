@@ -15,7 +15,7 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
-    return response.status(400).send({ error: 'malformatted id'});
+    return response.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
     return response.status(400).send({ error: error.message });
   }
@@ -97,7 +97,7 @@ const setPerson = (request, response, next) => {
     name: body.name,
     number: body.number,
   };
-  
+
   Person.findByIdAndUpdate(request.params.id, newPerson, { new: true })
     .then(updatedPerson => {
       response.json(updatedPerson);
