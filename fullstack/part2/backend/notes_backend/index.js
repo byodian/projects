@@ -9,7 +9,7 @@ const setHeaders = (request, response, next) => {
   response.set('Access-Control-Allow-Headers', 'Content-Type,API-KEY');
   response.set('Access-Control-Allow-Credentials', 'true');
   next();
-}
+};
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message);
@@ -22,7 +22,7 @@ const errorHandler = (error, request, response, next) => {
   }
 
   next(error);
-}
+};
 
 app.use(express.static('build'));
 app.use(express.json());
@@ -42,15 +42,16 @@ app.get('/api/notes', (request, response, next) => {
 });
 
 app.get('/api/notes/:id', (request, response, next) => {
-  Note.findById(request.params.id)
-  .then(note => {
-    if (note) {
-      response.json(note);
-    } else {
-      response.status(404).end();
-    }
-  })
-  .catch(error => next(error));
+  Note
+    .findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch(error => next(error));
 });
 
 app.post('/api/notes', (request, response, next) => {
@@ -75,7 +76,7 @@ app.post('/api/notes', (request, response, next) => {
       response.json(savedAndFormattedNote);
     })
     .catch(error => next(error));
-})
+});
 
 app.put('/api/notes/:id', (request, response, next) => {
   const body = request.body;
@@ -83,18 +84,18 @@ app.put('/api/notes/:id', (request, response, next) => {
   const note = {
     content: body.content,
     important: body.important
-  }
+  };
 
   Note.findByIdAndUpdate(request.params.id, note, { new: true })
     .then(updatedNote => {
       response.json(updatedNote);
     })
     .catch(error => next(error));
-})
+});
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end();
     })
     .catch(error => next(error));
@@ -102,7 +103,9 @@ app.delete('/api/notes/:id', (request, response, next) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3001;
+// eslint-disable-next-line no-undef
+const PORT = process.env.PORT || 3001; 
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

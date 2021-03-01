@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const url = process.env.MONGODB_URL;
+const url = process.env.MONGODB_URL; // eslint-disable-line
 
 const options = {
   useNewUrlParser: true,
@@ -11,12 +11,12 @@ const options = {
 };
 
 mongoose.connect(url, options)
-  .then(result => {
+  .then(() => {
     console.log('MongoDB is connected');
   })
   .catch(error => {
     console.log(error.message);
-  })
+  });
   
 const personSchema = new mongoose.Schema({
   name: {
@@ -40,6 +40,6 @@ personSchema.set('toJSON', {
     delete returnedObject._id;
     delete returnedObject.__v;
   }
-})
+});
 
 module.exports =  mongoose.model('Person', personSchema);

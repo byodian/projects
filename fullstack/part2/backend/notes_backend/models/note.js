@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// eslint-disable-next-line no-undef
 const url = process.env.MONGODB_URL;
 const options = {
   useNewUrlParser: true,
@@ -9,12 +10,12 @@ const options = {
 };
 
 mongoose.connect(url, options)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB');
   })
   .catch(error => {
     console.log('error connecting to MongoDB', error.message);
-  })
+  });
 
 
 const noteSchema = new mongoose.Schema({
@@ -28,7 +29,7 @@ const noteSchema = new mongoose.Schema({
     required: true
   },
   important: Boolean,
-})
+});
 
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -36,6 +37,6 @@ noteSchema.set('toJSON', {
     delete returnedObject._id;
     delete returnedObject.__v;
   }
-})
+});
 
 module.exports = mongoose.model('Note', noteSchema);
