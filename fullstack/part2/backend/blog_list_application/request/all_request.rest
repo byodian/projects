@@ -1,0 +1,16 @@
+### GET
+GET http://localhost:3001/api/blogs
+
+### unknown endpoint
+GET http://localhost:3001
+
+### POST
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "You a"
+}
+
+### DELETE
+DELETE http://localhost:3001/api/blogs/2
