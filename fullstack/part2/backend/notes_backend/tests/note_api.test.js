@@ -9,18 +9,14 @@ const Note = require('../models/note');
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  console.log('cleared');
 
-  helper.initialNotes.forEach(async note => {
-    let noteObject = new Note(note);
-    await noteObject.save();
-    console.log('saved');
-  });
-  console.log('done');
+  const noteObjects = helper.initialNotes
+    .map(note => new Note(note));
+  const promiseArray = noteObjects.map(note => note.save());
+  await Promise.all(promiseArray);
 });
 
 describe('REST API test', () => {
-  console.log('entered test');
   test('notes are returned as json', async () => {
     await api
       .get('/api/notes')
