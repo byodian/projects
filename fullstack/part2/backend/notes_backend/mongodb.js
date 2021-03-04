@@ -9,7 +9,7 @@ if (process.argv.length < 3) {
 const password = process.argv[2];
 /* eslint-enable */
 
-const url = `mongodb://yodi:${password}@cluster0-shard-00-00.lvcr8.mongodb.net:27017,cluster0-shard-00-01.lvcr8.mongodb.net:27017,cluster0-shard-00-02.lvcr8.mongodb.net:27017/note-app?ssl=true&replicaSet=atlas-joviuu-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const url = `mongodb://yodi:${password}@cluster0-shard-00-00.lvcr8.mongodb.net:27017,cluster0-shard-00-01.lvcr8.mongodb.net:27017,cluster0-shard-00-02.lvcr8.mongodb.net:27017/note-app-test?ssl=true&replicaSet=atlas-joviuu-shard-0&authSource=admin&retryWrites=true&w=majority`;
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true});
 
 const db = mongoose.connection;
@@ -25,27 +25,25 @@ const noteSchema = new mongoose.Schema({
 });
 
 const Note = mongoose.model('Note', noteSchema);
-console.log(noteSchema.path('content'));
 
-
-// const note = new Note({
-//   content: 'HTML is Easy',
-//   date: new Date(),
-//   important: true,
-// })
-
-Note.find({}).then(result => {
-  result.forEach(note => {
-    console.log(note);
-  });
-  db.close();
+const note = new Note({
+  content: 'HTML is Easy',
+  date: new Date(),
+  important: true,
 });
 
-// note.save()
-//   .then(result => {
-//     console.log('note saved!');
-//     mongoose.connection.close();
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   })
+// Note.find({}).then(result => {
+//   result.forEach(note => {
+//     console.log(note);
+//   });
+//   db.close();
+// });
+
+note.save()
+  .then(() => {
+    console.log('note saved!');
+    mongoose.connection.close();
+  })
+  .catch(error => {
+    console.log(error);
+  });
