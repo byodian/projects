@@ -10,10 +10,11 @@ const Note = require('../models/note');
 beforeEach(async () => {
   await Note.deleteMany({});
 
-  const noteObjects = helper.initialNotes
-    .map(note => new Note(note));
-  const promiseArray = noteObjects.map(note => note.save());
-  await Promise.all(promiseArray);
+  // Make sure a specifc order executed
+  for (let note of helper.initialNotes) {
+    let noteObject = new Note(note);
+    await noteObject.save();
+  }
 });
 
 describe('REST API test', () => {
