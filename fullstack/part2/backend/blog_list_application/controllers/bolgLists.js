@@ -1,13 +1,13 @@
 const blogListsRouter = require('express').Router();
 const Blog = require('../models/blogList');
 
-blogListsRouter.get('/', (req, res, next) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      res.json(blogs);
-    })
-    .catch(error => next(error));
+blogListsRouter.get('/', async (req, res, next) => {
+  try {
+    const blogs = await Blog.find({});
+    res.json(blogs);
+  } catch(exception) {
+    next(exception);
+  }
 });
 
 blogListsRouter.get('/:id', (req, res, next) => {
@@ -18,26 +18,26 @@ blogListsRouter.get('/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-blogListsRouter.post('/', (req, res, next) => {
+blogListsRouter.post('/', async (req, res, next) => {
   const body = req.body;
 
-  if (!body.title) {
+  if (!body.title || !body.url) {
     return res.status(400).send({ error: 'title missing' });
   }
 
   const blog = new Blog({
     title: body.title,
     author: body.author || 'byodian',
-    url: 'https://byodiandev.com',
-    likes: Math.floor(Math.random() * 10)
+    url: body.url,
+    likes: body.likes || 0
   });
 
-  blog
-    .save()
-    .then(savedBlogList => {
-      res.json(savedBlogList);
-    })
-    .catch(error => next(error));
+  try {
+    const savedBlog = await blog.save();
+    res.json(savedBlog);
+  } catch(exception) {
+    next(exception);
+  }
 });
 
 blogListsRouter.delete('/:id', (req, res, next) => {
