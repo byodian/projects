@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const helper = require('./test_helper');
 const app = require('../app');
 const api = supertest(app);
-const helper = require('./test_helper');
+
 const Note = require('../models/note');
 
 /* eslint-disable no-undef*/
@@ -17,7 +18,7 @@ beforeEach(async () => {
   }
 });
 
-describe('REST API test', () => {
+describe('when there is initially some notes saved', () => {
   test('notes are returned as json', async () => {
     await api
       .get('/api/notes')
@@ -35,8 +36,40 @@ describe('REST API test', () => {
     const contents = response.body.map(r => r.content);
     expect(contents).toContain('HTML is easy');
   });
+});
 
-  test('a valid note can be added', async () => {
+describe('viewing a specific note', () => {
+  test('succeeds with a valid id', async () => {
+    const notesAtEnd = await helper.notesInDb();
+    const noteToView = notesAtEnd[0];
+
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+    
+    const processedNoteToView = JSON.parse(JSON.stringify(noteToView));
+    expect(resultNote.body).toEqual(processedNoteToView);
+  });
+
+  test('fails with statuscode 404 if note does not exist', async () => {
+    const validNonexistingid = await helper.nonExistingId();
+
+    await api
+      .get(`/api/notes/${validNonexistingid}`)
+      .expect(404);
+  });
+
+  test('fails with statuscode 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445';
+
+    await api
+      .get(`/api/notes/${invalidId}`)
+      .expect(400);
+  });
+});
+describe('addition of a new note', () => {
+  test('succeeds with valid data', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
       important: true,
@@ -57,7 +90,7 @@ describe('REST API test', () => {
     );
   });
 
-  test('note without content is not added', async () => {
+  test('fails with status code 400 if data is invaild', async () => {
     const newNote = {
       important : true,
     };
@@ -71,48 +104,10 @@ describe('REST API test', () => {
 
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
   });
+});
 
-  test('a specific note can be viewed', async () => {
-    const notesAtEnd = await helper.notesInDb();
-
-    const noteToView = notesAtEnd[0];
-    console.log(typeof noteToView.date);
-
-    const resultNote = await api
-      .get(`/api/notes/${noteToView.id}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-    
-    console.log(typeof resultNote.body.date);
-  
-    const processedNoteToView = JSON.parse(JSON.stringify(noteToView));
-    expect(resultNote.body).toEqual(processedNoteToView);
-  });
-
-  test('a specific note can be changed', async () => {
-    const notesAtStart = await helper.notesInDb();
-    console.log(notesAtStart); 
-    const noteToChange = notesAtStart[0];
-    
-    const newNote = {
-      content: 'JavaScript is hard',
-      important: true
-    };
-
-    const resultNote = await api
-      .put(`/api/notes/${noteToChange.id}`)
-      .send(newNote)
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    const notesAtEnd = await helper.notesInDb();
-    console.log(notesAtEnd);
-
-    const processedNoteToChange = JSON.parse(JSON.stringify(notesAtEnd[0]));
-    expect(resultNote.body).toEqual(processedNoteToChange);
-  });
-
-  test('a note can be deleted', async () => {
+describe('deletion of a note', () => {
+  test('succeeds with statuscode 204 if id is valid', async () => {
     const notesAtStart = await helper.notesInDb();
     const noteToDelete = notesAtStart[0];
 
@@ -129,6 +124,29 @@ describe('REST API test', () => {
     const contents = notesAtEnd.map(r => r.content);
 
     expect(contents).not.toContain(noteToDelete.content);
+  });
+});
+
+describe('updating a specific note', () => {
+  test('succeeds with statuscode if id is valid', async () => {
+    const notesAtStart = await helper.notesInDb();
+    const noteToChange = notesAtStart[0];
+    
+    const newNote = {
+      content: 'JavaScript is hard',
+      important: true
+    };
+
+    const resultNote = await api
+      .put(`/api/notes/${noteToChange.id}`)
+      .send(newNote)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const notesAtEnd = await helper.notesInDb();
+
+    const processedNoteToChange = JSON.parse(JSON.stringify(notesAtEnd[0]));
+    expect(resultNote.body).toEqual(processedNoteToChange);
   });
 });
 
