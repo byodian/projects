@@ -4,7 +4,7 @@ const app = require('../app');
 const api = supertest(app);
 
 const Blog = require('../models/blogList');
-const { initialBlogs, blogsInDb } = require('./test_helper');
+const { initialBlogs, blogsInDb, nonExistingId } = require('./test_helper');
 
 /* eslint-disable no-undef */
 beforeEach(async () => {
@@ -16,7 +16,8 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-describe('blog lists api test', () => {
+
+describe('when there is initially some blogs saved', () => {
   test('blog lists are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -37,11 +38,12 @@ describe('blog lists api test', () => {
     const blogs = await blogsInDb();
     expect(blogs[0]['id']).toBeDefined();
   });
+});
 
-  test('a specific blog is within the returned blogs', async () => {
+describe('viewing a specific data', () => {
+  test('succeeds with a valid id', async () => {
     const blogsAtEnd = await blogsInDb();
     const blogsToView = blogsAtEnd[0];
-
     const returnedBlog = await api
       .get(`/api/blogs/${blogsToView.id}`)
       .expect(200)
@@ -52,7 +54,39 @@ describe('blog lists api test', () => {
     );
   });
 
-  test('a valid blog can be added', async () => {
+  test('fails with statuscode 404 if blog does not exist', async () => {
+    const validNonexistingId = await nonExistingId();
+
+    await api
+      .get(`/api/blogs/${validNonexistingId}`)
+      .expect(404);
+  });
+
+  test('fails with statuscode 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445';
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400);
+  });
+});
+
+describe('deletion of a blog', () => {
+  test('succeeds with statuscode 204 if id is valid', async () => {
+    const blogsAtStart = await blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204);
+
+    const blogsAtEnd = await blogsInDb();
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1);
+  });
+});
+
+describe('addition of a new blog', () => {
+  test('succeeds with a valid data', async () => {
     const newBlog = {
       title: 'browser can only execute javascript code',
       url: 'https://byodian.com/posts',
@@ -70,11 +104,10 @@ describe('blog lists api test', () => {
     expect(blogs).toHaveLength(initialBlogs.length + 1);
 
     const titles = blogs.map(blog => blog.title);
-    console.log(titles);
     expect(titles).toContain('browser can only execute javascript code');
   });
 
-  test('a blog without title or url is not added', async () => {
+  test('falis with statuscode 400 if data is invalid', async () => {
     const blognoTitle = {
       url: 'https://byodian.com/posts',
       likes: 12,
@@ -101,7 +134,7 @@ describe('blog lists api test', () => {
     expect(blogsAtEnd).toHaveLength(initialBlogs.length);
   });
 
-  test('when the likes porperty is missing, the default value is 0', async () => {
+  test('succeeds with a valid data with missing likes dafault value is 0', async () => {
     const newBlog = {
       title: 'VS Code is awesome editor',
       url: 'https://byodiandev.com/posts',
@@ -119,11 +152,12 @@ describe('blog lists api test', () => {
     const savedBlog = blogsAtEnd.filter(blog => blog.title === 'VS Code is awesome editor');
     expect(savedBlog[0]['likes']).toBe(0);
   });
+});
 
+describe('updating a specific blog', () => {
   test('succeeds with statuscode 200 if id is valid', async () => {
     const blogsAtStart = await blogsInDb();
     const blogToUpdate = blogsAtStart[0];
-    console.log(blogToUpdate.date);
 
     const newBlog = {
       'title': 'HTML is so easy',
@@ -138,26 +172,12 @@ describe('blog lists api test', () => {
       .expect(200)
       .expect('Content-Type', /json/);
 
-    console.log(resultBlog.body);
-
     const blogsAtEnd = await blogsInDb();
     const processedBlogToChange = JSON.parse(JSON.stringify(blogsAtEnd[0]));
     expect(resultBlog.body).toEqual(processedBlogToChange);
 
     const likes = blogsAtEnd.map(blog => blog.likes);
     expect(likes).toContain(6);
-  });
-
-  test('succeeds with statuscode 204 if id is valid', async () => {
-    const blogsAtStart = await blogsInDb();
-    const blogToDelete = blogsAtStart[0];
-
-    await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
-      .expect(204);
-
-    const blogsAtEnd = await blogsInDb();
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1);
   });
 });
 

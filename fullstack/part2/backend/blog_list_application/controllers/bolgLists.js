@@ -10,12 +10,17 @@ blogListsRouter.get('/', async (req, res, next) => {
   }
 });
 
-blogListsRouter.get('/:id', (req, res, next) => {
-  Blog.findById(req.params.id)
-    .then(returnedBlogList => {
-      res.json(returnedBlogList);
-    })
-    .catch(error => next(error));
+blogListsRouter.get('/:id', async (req, res, next) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (blog) {
+      res.json(blog);
+    } else {
+      res.status(404).end();
+    }
+  } catch(exception) {
+    next(exception);
+  }
 });
 
 blogListsRouter.post('/', async (req, res, next) => {
