@@ -5,12 +5,14 @@ const initialBlogs = [
     'title': 'HTML is so easy',
     'author': 'byodian',
     'url': 'https://byodiandev.com',
+    'date': new Date(),
     'likes': 2,
   },
   {
     'title': 'JavaScript is so hard',
     'author': 'byodian',
     'url': 'https://byodiandev.com',
+    'date': new Date(),
     'likes': 4,
   }
 ];

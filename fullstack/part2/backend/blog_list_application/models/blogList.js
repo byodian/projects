@@ -9,7 +9,8 @@ const blogSchema = mongoose.Schema({
   },
   author: String,
   url: String,
-  likes: Number
+  likes: Number,
+  date: Date
 });
 blogSchema.plugin(uniqueValidator);
 
