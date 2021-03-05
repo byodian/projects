@@ -128,7 +128,7 @@ describe('deletion of a note', () => {
 });
 
 describe('updating a specific note', () => {
-  test('succeeds with statuscode if id is valid', async () => {
+  test('succeeds with statuscode 200 if id is valid', async () => {
     const notesAtStart = await helper.notesInDb();
     const noteToChange = notesAtStart[0];
     
