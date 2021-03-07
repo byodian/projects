@@ -2,9 +2,6 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "lol",
+  "content": "lyj is drawing by ipad at her desk",
   "important": false
 }
-
-###
-GET http://localhost:3001/api/notes

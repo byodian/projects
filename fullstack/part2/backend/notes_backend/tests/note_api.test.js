@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const helper = require('./test_helper');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
 const app = require('../app');
 const api = supertest(app);
 
@@ -68,6 +70,7 @@ describe('viewing a specific note', () => {
       .expect(400);
   });
 });
+
 describe('addition of a new note', () => {
   test('succeeds with valid data', async () => {
     const newNote = {
@@ -75,9 +78,23 @@ describe('addition of a new note', () => {
       important: true,
     };
 
+    const rootuser = {
+      username: 'root',
+      password: 'sekret'
+    };
+    
+    const response = await api
+      .post('/api/login')
+      .send(rootuser)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(response.body.username).toBe(rootuser.username);
+
     await api
       .post('/api/notes')
       .send(newNote)
+      .set('Authorization', `bearer ${response.body.token}`)
       .expect(200)
       .expect('Content-Type', /json/);
 
@@ -95,14 +112,41 @@ describe('addition of a new note', () => {
       important : true,
     };
 
+    const rootuser = {
+      username: 'root',
+      password: 'sekret'
+    };
+
+    const response = await api
+      .post('/api/login')
+      .send(rootuser)
+      .expect(200);
+
     await api
       .post('/api/notes')
       .send(newNote)
+      .set('Authorization', `bearer ${response.body.token}`)
       .expect(400);
       
     const notesAtEnd = await helper.notesInDb();
 
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+  });
+
+  test('fails with status code 401 if authorizarion is not setted', async () => {
+    const notesAtStart = await helper.notesInDb();
+    const newNote = {
+      content: 'This note is not added',
+      important: false
+    };
+
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .expect(401);
+
+    const notesAtEnd = await helper.notesInDb();
+    expect(notesAtEnd).toHaveLength(notesAtStart.length);
   });
 });
 
@@ -149,6 +193,61 @@ describe('updating a specific note', () => {
     expect(resultNote.body).toEqual(processedNoteToChange);
   });
 });
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash('sekret', 10);
+
+    const user = new User({ username: 'root', name: 'superuser', passwordHash });
+    await user.save();
+  });
+
+  test('creation fails with proper satuscode and message if username is already taken', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'root',
+      name: 'superuser',
+      password: 'selegrina'
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /json/);
+    
+    expect(result.body.error).toContain('`username` to be unique');
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map(u => u.username);
+    expect(usernames).toContain(newUser.username);
+  });
+});
+
+
 
 afterAll(() => {
   mongoose.connection.close();
