@@ -5,10 +5,14 @@ const blogSchema = mongoose.Schema({
   title: {
     type: String,
     minLength: 8,
-    unique: true
+    unique: true,
+    required: 'true'
   },
   author: String,
-  url: String,
+  url: {
+    type: String,
+    required: true
+  },
   likes: Number,
   date: Date,
   user: {

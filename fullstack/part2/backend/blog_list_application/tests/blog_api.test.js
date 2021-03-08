@@ -10,11 +10,22 @@ const { initialBlogs, blogsInDb, nonExistingId, usersInDb } = require('./test_he
 /* eslint-disable no-undef */
 beforeEach(async () => {
   await Blog.deleteMany({});
+  await User.deleteMany({});
+  const passwordHash = await bcrypt.hash('selerina', 10);
+  const user = new User({ username: 'root', name: 'supername', passwordHash });
+  await user.save();
 
-  const blogs = initialBlogs.map(blog => new Blog(blog));
-  const promiseArray = blogs.map(blog => blog.save());
+  const blogs = initialBlogs
+    .map(blog => {
+      blog.user = user._id;
+      return blog;
+    })
+    .map(blog => new Blog(blog));
 
-  await Promise.all(promiseArray);
+  for (let blog of blogs) {
+    const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+  }
 });
 
 
@@ -74,11 +85,23 @@ describe('viewing a specific data', () => {
 
 describe('deletion of a blog', () => {
   test('succeeds with statuscode 204 if id is valid', async () => {
+    const user = {
+      username: 'root',
+      password: 'selerina'
+    };
+
+    const result = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
     const blogsAtStart = await blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `bearer ${result.body.token}`)
       .expect(204);
 
     const blogsAtEnd = await blogsInDb();
@@ -88,16 +111,27 @@ describe('deletion of a blog', () => {
 
 describe('addition of a new blog', () => {
   test('succeeds with a valid data', async () => {
+    const superuser = {
+      username: 'root',
+      password: 'selerina'
+    };
+
+    const result = await api
+      .post('/api/login')
+      .send(superuser)
+      .expect(200);
+
     const newBlog = {
       title: 'browser can only execute javascript code',
       url: 'https://byodian.com/posts',
       likes: 6,
-      author: 'liuyajuan'
+      author: 'root'
     };
 
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `bearer ${result.body.token}`)
       .expect(200)
       .expect('Content-Type', /json/);
 
@@ -109,6 +143,16 @@ describe('addition of a new blog', () => {
   });
 
   test('falis with statuscode 400 if data is invalid', async () => {
+    const superuser = {
+      username: 'root',
+      password: 'selerina'
+    };
+
+    const result = await api
+      .post('/api/login')
+      .send(superuser)
+      .expect(200);
+
     const blognoTitle = {
       url: 'https://byodian.com/posts',
       likes: 12,
@@ -124,11 +168,13 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(blognoTitle)
+      .set('Authorization', `bearer ${result.body.token}`)
       .expect(400);
 
     await api
       .post('/api/blogs')
       .send(blognoUrl)
+      .set('Authorization', `bearer ${result.body.token}`)
       .expect(400);
 
     const blogsAtEnd = await blogsInDb();
@@ -136,15 +182,26 @@ describe('addition of a new blog', () => {
   });
 
   test('succeeds with a valid data with missing likes dafault value is 0', async () => {
+    const superuser = {
+      username: 'root',
+      password: 'selerina'
+    };
+
+    const result = await api
+      .post('/api/login')
+      .send(superuser)
+      .expect(200);
+
     const newBlog = {
       title: 'VS Code is awesome editor',
       url: 'https://byodiandev.com/posts',
-      author: 'BYJ'
+      author: 'root'
     };
 
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `bearer ${result.body.token}`)
       .expect(200)
       .expect('Content-Type', /json/);
 
@@ -183,14 +240,6 @@ describe('updating a specific blog', () => {
 });
 
 describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-    const passwordHash = await bcrypt.hash('selerina', 10);
-    const user = new User({ username: 'root', name: 'supername', passwordHash });
-
-    await user.save();
-  });
-
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await usersInDb();
 
@@ -227,7 +276,7 @@ describe('when there is initially one user in db', () => {
     expect(usersAtEnd).toHaveLength(usersAtStart.length);
   });
 
-  test('creation fails with statuscode 403 if password is missing', async () => {
+  test('creation fails with statuscode 400 if password is missing', async () => {
     const newUser = {
       username: 'selena',
       name: 'Liuyajuan'
@@ -236,7 +285,7 @@ describe('when there is initially one user in db', () => {
     await api
       .post('/api/users')
       .send(newUser)
-      .expect(403);
+      .expect(400);
   });
 
   test('creation fails with statuscode 400 if the length of username or password is less than 3', async () => {
@@ -269,6 +318,35 @@ describe('when there is initially one user in db', () => {
     expect(result2.body.error).toContain(
       'shorter than the minimum allowed length'
     );
+  });
+});
+
+describe('login in', () => {
+  test('succeeds with a correct password', async () => {
+    const user = {
+      username: 'root',
+      password: 'selerina'
+    };
+
+    const result = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(result.body.token).toBeDefined();
+  });
+
+  test('fails with a statuscode 401 if password is incorrect', async () => {
+    const user = {
+      username: 'root',
+      password: 'sekerina'
+    };
+
+    await api
+      .post('/api/login')
+      .send(user)
+      .expect(401);
   });
 });
 

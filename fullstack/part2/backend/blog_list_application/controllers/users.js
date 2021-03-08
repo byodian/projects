@@ -30,8 +30,8 @@ userRouter.post('/', async (req, res, next) => {
   const body = req.body;
 
   if (!body.password) {
-    return res.status(403).send({
-      error: 'missing password access to that resoure is forbidden'
+    return res.status(400).send({
+      error: 'missing password'
     });
   }
 
