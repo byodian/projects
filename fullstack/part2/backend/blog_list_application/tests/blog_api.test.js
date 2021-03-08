@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcrypt');
 const app = require('../app');
 const api = supertest(app);
 
-const Blog = require('../models/blogList');
-const { initialBlogs, blogsInDb, nonExistingId } = require('./test_helper');
-
+const Blog = require('../models/blog');
+const User = require('../models/user');
+const { initialBlogs, blogsInDb, nonExistingId, usersInDb } = require('./test_helper');
 /* eslint-disable no-undef */
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -178,6 +179,96 @@ describe('updating a specific blog', () => {
 
     const likes = blogsAtEnd.map(blog => blog.likes);
     expect(likes).toContain(6);
+  });
+});
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash('selerina', 10);
+    const user = new User({ username: 'root', name: 'supername', passwordHash });
+
+    await user.save();
+  });
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      username: 'byodian',
+      name: 'baiyongjian',
+      password: 'selerina'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const usersAtEnd = await usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+  });
+
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await usersInDb();
+    const newUser = {
+      username: 'root',
+      name: 'supername',
+      password: 'selerina'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400);
+
+    const usersAtEnd = await usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test('creation fails with statuscode 403 if password is missing', async () => {
+    const newUser = {
+      username: 'selena',
+      name: 'Liuyajuan'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(403);
+  });
+
+  test('creation fails with statuscode 400 if the length of username or password is less than 3', async () => {
+    const newUser1 = {
+      username: 'se',
+      name: 'Liuyajuan',
+      password: 'selerina'
+    };
+
+    const newUser2 = {
+      username: 'woooooo',
+      name: 'hahahahhaha',
+      password: 'se'
+    };
+
+    const result1 = await api
+      .post('/api/users')
+      .send(newUser1)
+      .expect(400)
+      .expect('Content-Type', /json/);
+
+    const result2 = await api
+      .post('/api/users')
+      .send(newUser2)
+      .expect(400);
+
+    expect(result1.body.error).toContain(
+      'Path `username` (`se`) is shorter than the minimum allowed length'
+    );
+    expect(result2.body.error).toContain(
+      'shorter than the minimum allowed length'
+    );
   });
 });
 

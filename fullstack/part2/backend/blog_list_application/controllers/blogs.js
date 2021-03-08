@@ -1,18 +1,24 @@
-const blogListsRouter = require('express').Router();
-const Blog = require('../models/blogList');
+const blogsRouter = require('express').Router();
+const Blog = require('../models/blog');
+const User = require('../models/user');
 
-blogListsRouter.get('/', async (req, res, next) => {
+blogsRouter.get('/', async (req, res, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog
+      .find({})
+      .populate('user', { username: 1, name: 1 });
+
     res.json(blogs);
   } catch(exception) {
     next(exception);
   }
 });
 
-blogListsRouter.get('/:id', async (req, res, next) => {
+blogsRouter.get('/:id', async (req, res, next) => {
   try {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog
+      .findById(req.params.id)
+      .populate('user', { username: 1, name: 1 });
     if (blog) {
       res.json(blog);
     } else {
@@ -23,8 +29,9 @@ blogListsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-blogListsRouter.post('/', async (req, res, next) => {
+blogsRouter.post('/', async (req, res, next) => {
   const body = req.body;
+  const user = await User.findById(body.userId);
 
   if (!body.title || !body.url) {
     return res.status(400).send({ error: 'title missing' });
@@ -34,18 +41,22 @@ blogListsRouter.post('/', async (req, res, next) => {
     title: body.title,
     author: body.author || 'byodian',
     url: body.url,
-    likes: body.likes || 0
+    likes: body.likes || 0,
+    user: user._id
   });
 
   try {
     const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+
     res.json(savedBlog);
   } catch(exception) {
     next(exception);
   }
 });
 
-blogListsRouter.put('/:id', async (req, res, next) => {
+blogsRouter.put('/:id', async (req, res, next) => {
   try {
     const updatedBlogId = req.params.id;
     const body = req.body;
@@ -67,7 +78,7 @@ blogListsRouter.put('/:id', async (req, res, next) => {
   }
 });
 
-blogListsRouter.delete('/:id', async (req, res, next) => {
+blogsRouter.delete('/:id', async (req, res, next) => {
   try {
     await Blog.findByIdAndDelete(req.params.id);
     res.status(204).end();
@@ -76,4 +87,4 @@ blogListsRouter.delete('/:id', async (req, res, next) => {
   }
 });
 
-module.exports = blogListsRouter;
+module.exports = blogsRouter;
