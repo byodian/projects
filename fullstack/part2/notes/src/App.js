@@ -6,13 +6,12 @@ import Notification from './componets/Notification';
 import Footer from './componets/Footer';
 import LoginForm from './componets/LoginForm';
 import NoteForm from './componets/NoteForm';
-import Togglable from'./componets/Tooglable';
+import Togglable from './componets/Tooglable';
 import './index.css';
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('a new note...');
-  const [loginVisible, setLoginVisible] = useState(false);
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState('');
@@ -39,7 +38,7 @@ const App = (props) => {
     }
   }, []);
 
-  const notesToShow = showAll 
+  const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important === true);
 
@@ -50,7 +49,7 @@ const App = (props) => {
       return null;
     }
 
-    const noteObject= {
+    const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
     }
@@ -88,7 +87,7 @@ const App = (props) => {
         setNotes(notes.filter(n => n.id !== id));
       })
   }
-  
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -104,7 +103,7 @@ const App = (props) => {
       setUser(user);
       setUsername('');
       setPassword('');
-    } catch(exception) {
+    } catch (exception) {
       setErrorMessage('Wrong credentials');
       setTimeout(() => {
         setErrorMessage(null);
@@ -112,71 +111,65 @@ const App = (props) => {
     }
   };
 
-  const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' };
-    const showWhenVisible = { display: loginVisible ? '' : 'none' };
-    
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm 
-            username={username} 
-            password={password}
-            handleUsernameChange={({target}) => setUsername(target.value)}
-            handlePasswordChange={({target}) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
-      </div>
-    );
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedNoteappUser');
+    setUser(null);
   };
-  
-  const noteForm = () => {
-    return (
-      <Togglable buttonLabel="new note">
-        <NoteForm 
-          onSubmit={addNotes}
-          handleChange={handleNoteChange}
-          value={newNote}
+
+  const loginForm = () => (
+    <Togglable buttonLabel="login">
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
+    </Togglable>
+  );
+
+const noteForm = () => {
+  return (
+    <Togglable buttonLabel="new note">
+      <NoteForm
+        onSubmit={addNotes}
+        handleChange={handleNoteChange}
+        value={newNote}
+      />
+    </Togglable>
+  );
+};
+
+return (
+  <div>
+    <h1>Notes</h1>
+    <Notification message={errorMessage} />
+
+    {user === null
+      ? loginForm()
+      : <div>
+        <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
+        {noteForm()}
+      </div>
+    }
+
+    <div>
+      <button onClick={() => setShowAll(!showAll)}>
+        show {showAll ? 'important' : 'all'}
+      </button>
+    </div>
+    <ul>
+      {notesToShow.map(note =>
+        <Note
+          key={note.id}
+          note={note}
+          toggleImportance={() => toggleImportanceOf(note.id)}
         />
-      </Togglable>
-    );
-  };
-  
-	return (
-		<div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage}/>
-
-      {user === null
-        ? loginForm()
-        : <div>
-          <p>{user.name} logged-in</p>
-          {noteForm()}
-        </div>
-      }
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
-        </button>
-      </div>
-      <ul>
-        {notesToShow.map(note => 
-          <Note 
-            key={note.id} 
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        )}
-      </ul>
-      <Footer />
-		</div>
-	);
+      )}
+    </ul>
+    <Footer />
+  </div>
+);
 }
 
 export default App;
