@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Note from './componets/Note';
 import noteService from './services/note';
 import loginService from './services/login';
@@ -9,7 +9,7 @@ import NoteForm from './componets/NoteForm';
 import Togglable from './componets/Tooglable';
 import './index.css';
 
-const App = (props) => {
+const App = () => {
   const [notes, setNotes] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -23,8 +23,8 @@ const App = (props) => {
         setNotes(initialNotes);
       })
       .catch(() => {
-        setErrorMessage('The service doesn\'t work')
-      })
+        setErrorMessage('The service doesn\'t work');
+      });
   }, []);
 
   useEffect(() => {
@@ -72,8 +72,8 @@ const App = (props) => {
         );
         removeErrorMessage(5000);
         setNotes(notes.filter(n => n.id !== id));
-      })
-  }
+      });
+  };
 
   const login = async (userObject) => {
     try {
@@ -98,44 +98,44 @@ const App = (props) => {
     </Togglable>
   );
 
-const noteForm = () => {
+  const noteForm = () => {
+    return (
+      <Togglable buttonLabel="new note" ref={noteFormRef}>
+        <NoteForm createNote={addNote} />
+      </Togglable>
+    );
+  };
+
   return (
-    <Togglable buttonLabel="new note" ref={noteFormRef}>
-      <NoteForm createNote={addNote} />
-    </Togglable>
+    <div>
+      <h1>Notes</h1>
+      <Notification message={errorMessage} />
+
+      {user === null
+        ? loginForm()
+        : <div>
+          <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
+          {noteForm()}
+        </div>
+      }
+
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+        show {showAll ? 'important' : 'all'}
+        </button>
+      </div>
+      <ul>
+        {notesToShow.map(note =>
+          <Note
+            key={note.id}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
+        )}
+      </ul>
+      <Footer />
+    </div>
   );
 };
-
-return (
-  <div>
-    <h1>Notes</h1>
-    <Notification message={errorMessage} />
-
-    {user === null
-      ? loginForm()
-      : <div>
-        <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
-        {noteForm()}
-      </div>
-    }
-
-    <div>
-      <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? 'important' : 'all'}
-      </button>
-    </div>
-    <ul>
-      {notesToShow.map(note =>
-        <Note
-          key={note.id}
-          note={note}
-          toggleImportance={() => toggleImportanceOf(note.id)}
-        />
-      )}
-    </ul>
-    <Footer />
-  </div>
-);
-}
 
 export default App;

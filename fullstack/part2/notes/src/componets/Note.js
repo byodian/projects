@@ -11,6 +11,6 @@ const Note = ({ note, toggleImportance }) => {
       <button className="btn-toggle" onClick={toggleImportance}>{label}</button>
     </li>
   );
-}
+};
 
 export default Note;

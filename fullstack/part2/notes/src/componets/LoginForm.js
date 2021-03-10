@@ -16,22 +16,22 @@ const LoginForm = ({ handleLogin }) => {
   return (
     <div>
       <h2>Login</h2>
-  
+
       <form onSubmit={handleSubmit}>
         <div>
           username
-          <input 
+          <input
             value={username}
             name="Username"
-            onChange={({ target }) => setUsername(target.value)} /> 
+            onChange={({ target }) => setUsername(target.value)} />
         </div>
         <div>
           password
-          <input 
+          <input
             type="password"
             value={password}
             name="Password"
-            onChange={({ target }) => setPassword(target.value)} /> 
+            onChange={({ target }) => setPassword(target.value)} />
         </div>
         <div>
           <button type="submit">login</button>
@@ -39,6 +39,6 @@ const LoginForm = ({ handleLogin }) => {
       </form>
     </div>
   );
-}
+};
 
 export default LoginForm;
