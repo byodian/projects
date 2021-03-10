@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Note from './componets/Note';
 import noteService from './services/note';
 import loginService from './services/login';
@@ -11,12 +11,10 @@ import './index.css';
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('a new note...');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const noteFormRef = useRef();
 
   useEffect(() => {
     noteService
@@ -42,29 +40,22 @@ const App = (props) => {
     ? notes
     : notes.filter(note => note.important === true);
 
-  const addNotes = (event) => {
-    event.preventDefault();
-    if (newNote === '') {
-      alert("The note input can't be empty.");
-      return null;
+  const removeErrorMessage = (timer) => {
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, timer);
+  };
+
+  const addNote = async (noteObject) => {
+    noteFormRef.current.toggleVisibility();
+    try {
+      const returnedNote = await noteService.create(noteObject);
+      setNotes(notes.concat(returnedNote));
+    } catch(exception) {
+      setErrorMessage('input can not be empty');
+      removeErrorMessage(5000);
     }
-
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    }
-
-    noteService
-      .create(noteObject)
-      .then(returnedNote => {
-        setNotes(notes.concat(returnedNote));
-        setNewNote('');
-      })
-  }
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  }
+  };
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id);
@@ -79,35 +70,20 @@ const App = (props) => {
         setErrorMessage(
           `Note "${note.content}" was already deleted from server`
         );
-
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-
+        removeErrorMessage(5000);
         setNotes(notes.filter(n => n.id !== id));
       })
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
+  const login = async (userObject) => {
     try {
-      const user = await loginService.login({
-        username, password
-      });
-
-      window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
-      );
+      const user = await loginService.login(userObject);
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user));
       noteService.setToken(user.token);
       setUser(user);
-      setUsername('');
-      setPassword('');
     } catch (exception) {
       setErrorMessage('Wrong credentials');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      removeErrorMessage(5000);
     }
   };
 
@@ -118,24 +94,14 @@ const App = (props) => {
 
   const loginForm = () => (
     <Togglable buttonLabel="login">
-      <LoginForm
-        username={username}
-        password={password}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-        handleSubmit={handleLogin}
-      />
+      <LoginForm handleLogin ={login} />
     </Togglable>
   );
 
 const noteForm = () => {
   return (
-    <Togglable buttonLabel="new note">
-      <NoteForm
-        onSubmit={addNotes}
-        handleChange={handleNoteChange}
-        value={newNote}
-      />
+    <Togglable buttonLabel="new note" ref={noteFormRef}>
+      <NoteForm createNote={addNote} />
     </Togglable>
   );
 };
