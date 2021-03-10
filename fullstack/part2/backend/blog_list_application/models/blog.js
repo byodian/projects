@@ -4,7 +4,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 const blogSchema = mongoose.Schema({
   title: {
     type: String,
-    minLength: 8,
+    minLength: 3,
     unique: true,
     required: 'true'
   },
