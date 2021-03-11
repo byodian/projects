@@ -6,7 +6,7 @@ import Notification from './componets/Notification';
 import Footer from './componets/Footer';
 import LoginForm from './componets/LoginForm';
 import NoteForm from './componets/NoteForm';
-import Togglable from './componets/Tooglable';
+import Togglable from './componets/Togglable';
 import './index.css';
 
 const App = () => {
