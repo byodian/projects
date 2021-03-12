@@ -26,9 +26,9 @@ const BlogForm = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div className="input-container">
           <label htmlFor="title">title</label>
-          <Input 
+          <Input
             id="title"
-            required={true} 
+            required={true}
             type="text"
             value={title}
             name="Title"
@@ -37,9 +37,9 @@ const BlogForm = ({ createBlog }) => {
         </div>
         <div className="input-container">
           <label htmlFor="author">author</label>
-          <Input 
+          <Input
             id="author"
-            required={true} 
+            required={true}
             type="text"
             value={author}
             name="Author"
@@ -48,9 +48,9 @@ const BlogForm = ({ createBlog }) => {
         </div>
         <div className="input-container">
           <label htmlFor="url">url</label>
-          <Input 
+          <Input
             id="url"
-            required={true} 
+            required={true}
             type="text"
             value={url}
             name="Url"

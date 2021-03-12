@@ -27,27 +27,27 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
       deleteBlog(blog.id);
     }
   };
-  
+
   const blogStyle = {
     border: '1px solid #000',
     marginBottom: '10px',
     padding: '4px'
   };
-  
+
   return (
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonLabel}</button>
-      <div style={showWhenVisible}>
-        <p><a href={blog.url}>{blog.url}</a></p>
-        <p>likes {blog.likes} <button onClick={handleUpdate}>like</button></p>
-        <p>Author {blog.author}</p>
-        <button onClick={handleDelete}>remove</button>
-      </div>
+        <div style={showWhenVisible}>
+          <p><a href={blog.url}>{blog.url}</a></p>
+          <p>likes {blog.likes} <button onClick={handleUpdate}>like</button></p>
+          <p>Author {blog.author}</p>
+          <button onClick={handleDelete}>remove</button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Blog
+export default Blog;

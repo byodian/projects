@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import React, { useState, useEffect, useRef } from 'react';
+import Blog from './components/Blog';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import Togglable from './components/Togglable';
 import BlogForm from './components/BlogForm';
 import Heading from './components/Heading';
-import blogService from './services/blog'
+import blogService from './services/blog';
 import loginService from './services/login';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [blogs, setBlogs] = useState([]);
   const [notificationProps, setNotification] = useState({
     message: null,
     className: ''
   });
   const [user, setUser] = useState(null);
+
+  const blogRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,7 +30,7 @@ const App = () => {
       setUser(loggedBlogappUser);
       blogService.setToken(loggedBlogappUser.token);
     }
-  }, [])
+  }, []);
 
   const removeWarnMessage = () => {
     setTimeout(() => {
@@ -41,6 +43,7 @@ const App = () => {
 
   const addBlog = async (newBlog) => {
     try {
+      blogRef.current.toggleVisibility();
       const blog = await blogService.create(newBlog);
       setBlogs(blogs.concat(blog));
       setNotification({
@@ -123,23 +126,23 @@ const App = () => {
       {user === null
         ? <LoginForm createLogin={getLoginMessage} />
         : <div>
-            <p>{user.name} logged in <button onClick={handleLogout} type="submit">logout</button></p>
-            <Togglable>
-              <BlogForm createBlog={addBlog} />
-            </Togglable>
-            <div>
-              {blogs.map(blog =>
-                <Blog 
-                  key={blog.id} 
-                  blog={blog} 
-                  updateBlog={handleUpdate}
-                  deleteBlog={handleDelete}
-                />
-              )}
-            </div>
-          </div>}
+          <p>{user.name} logged in <button onClick={handleLogout} type="submit">logout</button></p>
+          <Togglable buttonLabel="create new note" ref={blogRef}>
+            <BlogForm createBlog={addBlog} />
+          </Togglable>
+          <div>
+            {blogs.map(blog =>
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateBlog={handleUpdate}
+                deleteBlog={handleDelete}
+              />
+            )}
+          </div>
+        </div>}
     </div>
   );
 };
 
-export default App
+export default App;

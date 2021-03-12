@@ -7,7 +7,7 @@ const LoginForm = ({ createLogin }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    createLogin({ username, password});
+    createLogin({ username, password });
     setUsername('');
     setPassword('');
   };
@@ -17,7 +17,7 @@ const LoginForm = ({ createLogin }) => {
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="username">username</label>
-          <Input 
+          <Input
             id="username"
             isRequired={true}
             type="text"
@@ -28,7 +28,7 @@ const LoginForm = ({ createLogin }) => {
         </div>
         <div>
           <label htmlFor="password">password</label>
-          <Input 
+          <Input
             id="password"
             isRequired={true}
             type="password"

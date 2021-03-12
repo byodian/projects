@@ -1,6 +1,6 @@
 import React from 'react';
 const Notification = ({ notifiProps }) => {
-  
+
   if (!notifiProps.message) {
     return null;
   }
