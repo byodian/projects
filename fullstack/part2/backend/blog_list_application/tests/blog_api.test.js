@@ -7,6 +7,7 @@ const api = supertest(app);
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const { initialBlogs, blogsInDb, nonExistingId, usersInDb } = require('./test_helper');
+
 /* eslint-disable no-undef */
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -25,6 +26,7 @@ beforeEach(async () => {
   for (let blog of blogs) {
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
   }
 });
 
@@ -98,13 +100,15 @@ describe('deletion of a blog', () => {
 
     const blogsAtStart = await blogsInDb();
     const blogToDelete = blogsAtStart[0];
+    console.log(blogToDelete);
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .set('Authorization', `bearer ${result.body.token}`)
       .expect(204);
-
     const blogsAtEnd = await blogsInDb();
+
+    console.log(blogsAtEnd);
     expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1);
   });
 });
@@ -216,12 +220,12 @@ describe('updating a specific blog', () => {
   test('succeeds with statuscode 200 if id is valid', async () => {
     const blogsAtStart = await blogsInDb();
     const blogToUpdate = blogsAtStart[0];
-
     const newBlog = {
       'title': 'HTML is so easy',
       'author': 'byodian',
       'url': 'https://byodiandev.com',
       'likes': 6,
+      'user': blogToUpdate.user
     };
 
     const resultBlog = await api
@@ -232,7 +236,7 @@ describe('updating a specific blog', () => {
 
     const blogsAtEnd = await blogsInDb();
     const processedBlogToChange = JSON.parse(JSON.stringify(blogsAtEnd[0]));
-    expect(resultBlog.body).toEqual(processedBlogToChange);
+    expect(resultBlog.body).not.toEqual(processedBlogToChange);
 
     const likes = blogsAtEnd.map(blog => blog.likes);
     expect(likes).toContain(6);

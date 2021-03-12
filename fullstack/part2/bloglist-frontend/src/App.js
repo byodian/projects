@@ -2,28 +2,24 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
-import BlogForm from './components/CreateBlogForm';
+import Togglable from './components/Togglable';
+import BlogForm from './components/BlogForm';
 import Heading from './components/Heading';
-import blogService from './services/blogs'
+import blogService from './services/blog'
 import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [notificationProps, setNotificationProps] = useState({
+  const [notificationProps, setNotification] = useState({
     message: null,
     className: ''
   });
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )
+    );
   }, []);
 
   useEffect(() => {
@@ -36,29 +32,76 @@ const App = () => {
 
   const removeWarnMessage = () => {
     setTimeout(() => {
-      setNotificationProps({
+      setNotification({
         message: null,
         error: ''
       });
     }, 5000);
   };
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const addBlog = async (newBlog) => {
     try {
-      const user = await loginService.login({
-        username, password
+      const blog = await blogService.create(newBlog);
+      setBlogs(blogs.concat(blog));
+      setNotification({
+        message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        className: 'pass'
       });
+      removeWarnMessage();
+    } catch (exception) {
+      setNotification({
+        message: 'request fails',
+        className: 'error'
+      });
+      removeWarnMessage();
+    }
+  };
 
+  const handleUpdate = async (id, newBlog) => {
+    try {
+      const updatedBlog = await blogService.update(id, newBlog);
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog));
+      setNotification({
+        message: `blog ${updatedBlog.title} by updated`,
+        className: 'pass'
+      });
+      removeWarnMessage();
+    } catch(exception) {
+      setNotification({
+        message: 'request fails',
+        className: 'error'
+      });
+      removeWarnMessage();
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await blogService.remove(id);
+      setBlogs(blogs.filter(blog => blog.id !== id));
+      setNotification({
+        message: 'blog remove successfully',
+        className: 'pass'
+      });
+    } catch(exception) {
+      setNotification({
+        message: 'request fails',
+        className: 'error'
+      });
+      removeWarnMessage();
+    }
+  };
+
+  const getLoginMessage = async (userObject) => {
+    try {
+      const user = await loginService.login(userObject);
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       );
       blogService.setToken(user.token);
       setUser(user);
-      setUsername('');
-      setPassword('');
     } catch (exception) {
-      setNotificationProps({
+      setNotification({
         message: 'wrong username or password',
         className: 'error'
       });
@@ -71,48 +114,6 @@ const App = () => {
     setUser(null);
   };
 
-  const addBlog = async (event) => {
-    event.preventDefault();
-    try {
-      const blog = await blogService.create({ title, author, url });
-      setBlogs(blogs.concat(blog));
-      setNotificationProps({
-        message: `a new blog ${title} by ${author} added`,
-        className: 'pass'
-      })
-
-      setTitle('');
-      setAuthor('');
-      setUrl('');
-      removeWarnMessage();
-    } catch (exception) {
-      setNotificationProps({
-        message: 'request fails',
-        className: 'error'
-      });
-      removeWarnMessage();
-    }
-  }
-
-  const loginConfig = {
-    username,
-    password,
-    setUsername,
-    setPassword,
-    handleLogin
-  };
-  
-
-  const creatBlogConfig = {
-    title,
-    author,
-    url,
-    setTitle,
-    setAuthor,
-    setUrl,
-    addBlog
-  };
-
   return (
     <div>
       {user === null
@@ -120,15 +121,22 @@ const App = () => {
         : <Heading text='blogs' />}
       <Notification notifiProps={notificationProps} />
       {user === null
-        ? <LoginForm loginFormConfig={loginConfig} />
+        ? <LoginForm createLogin={getLoginMessage} />
         : <div>
             <p>{user.name} logged in <button onClick={handleLogout} type="submit">logout</button></p>
-            <BlogForm blogFormConfig={creatBlogConfig} />
-            <ul>
+            <Togglable>
+              <BlogForm createBlog={addBlog} />
+            </Togglable>
+            <div>
               {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} />
+                <Blog 
+                  key={blog.id} 
+                  blog={blog} 
+                  updateBlog={handleUpdate}
+                  deleteBlog={handleDelete}
+                />
               )}
-            </ul>
+            </div>
           </div>}
     </div>
   );

@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Heading from './Heading';
 import Input from './Input';
 
-const BlogForm = ({ blogFormConfig }) => {
-  const { title, author, url, setTitle, setAuthor, setUrl, addBlog } = blogFormConfig;
+const BlogForm = ({ createBlog }) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const addBlog = async (event) => {
+    event.preventDefault();
+    createBlog({
+      title,
+      author,
+      url
+    });
+    setTitle('');
+    setUrl('');
+    setAuthor('');
+    setUrl('');
+  };
+
   return (
     <div>
       <Heading text="create a new blog" />
       <form onSubmit={addBlog}>
-        <div>
-          title:
+        <div className="input-container">
+          <label htmlFor="title">title</label>
           <Input 
+            id="title"
             required={true} 
             type="text"
             value={title}
@@ -18,9 +35,10 @@ const BlogForm = ({ blogFormConfig }) => {
             handleChange={({ target }) => setTitle(target.value)}
           />
         </div>
-        <div>
-          author:
+        <div className="input-container">
+          <label htmlFor="author">author</label>
           <Input 
+            id="author"
             required={true} 
             type="text"
             value={author}
@@ -28,9 +46,10 @@ const BlogForm = ({ blogFormConfig }) => {
             handleChange={({ target }) => setAuthor(target.value)}
           />
         </div>
-        <div>
-          url:
+        <div className="input-container">
+          <label htmlFor="url">url</label>
           <Input 
+            id="url"
             required={true} 
             type="text"
             value={url}
