@@ -15,12 +15,12 @@ const App = () => {
     className: ''
   });
   const [user, setUser] = useState(null);
-
   const blogRef = useRef();
+  const compareFn = (a, b) => b.likes - a.likes;
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort(compareFn))
     );
   }, []);
 
@@ -63,7 +63,10 @@ const App = () => {
   const handleUpdate = async (id, newBlog) => {
     try {
       const updatedBlog = await blogService.update(id, newBlog);
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog));
+      setBlogs(blogs
+        .map(blog => blog.id !== id ? blog : updatedBlog)
+        .sort(compareFn)
+      );
       setNotification({
         message: `blog ${updatedBlog.title} by updated`,
         className: 'pass'
@@ -71,7 +74,7 @@ const App = () => {
       removeWarnMessage();
     } catch(exception) {
       setNotification({
-        message: 'request fails',
+        message: 'Authorizated fails',
         className: 'error'
       });
       removeWarnMessage();
@@ -88,7 +91,7 @@ const App = () => {
       });
     } catch(exception) {
       setNotification({
-        message: 'request fails',
+        message: 'Authorizated fails',
         className: 'error'
       });
       removeWarnMessage();
