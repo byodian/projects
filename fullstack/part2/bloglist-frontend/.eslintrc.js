@@ -1,8 +1,10 @@
 module.exports = {
   'env': {
+    'node': true,
     'es6': true,
     'browser': true,
-    'jest/globals': true
+    'jest/globals': true,
+    'cypress/globals': true
   },
   'extends': [
     'eslint:recommended',
@@ -16,7 +18,7 @@ module.exports = {
     }
   },
   'plugins': [
-    'react', 'jest'
+    'react', 'jest', 'cypress'
   ],
   'rules': {
     'no-console': 0,

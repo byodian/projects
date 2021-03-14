@@ -95,7 +95,7 @@ const App = () => {
     }
   };
 
-  const getLoginMessage = async (userObject) => {
+  const createLogin = async (userObject) => {
     try {
       const user = await loginService.login(userObject);
       window.localStorage.setItem(
@@ -124,7 +124,7 @@ const App = () => {
         : <Heading text='blogs' />}
       <Notification notifiProps={notificationProps} />
       {user === null
-        ? <LoginForm createLogin={getLoginMessage} />
+        ? <LoginForm createLogin={createLogin} />
         : <div>
           <p>{user.name} logged in <button onClick={handleLogout} type="submit">logout</button></p>
           <Togglable buttonLabel="create new note" ref={blogRef}>
