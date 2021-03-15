@@ -1,9 +1,10 @@
-const SearchForm = ({ value, handleChange}) => (
+import React from 'react';
+const SearchForm = ({ value, handleChange }) => (
   <div>
     <form>
         find countries <input value={value} onChange={handleChange}/>
-      </form>
+    </form>
   </div>
-)
+);
 
 export default SearchForm;
