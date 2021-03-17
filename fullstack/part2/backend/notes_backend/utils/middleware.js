@@ -13,10 +13,11 @@ const unknownEndpoint = (request, response) => {
 };
 
 const setHeaders = (request, response, next) => {
-  response.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // response.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // response.set('Access-Control-Allow-Credentials', 'true');
+  response.set('Access-Control-Allow-Origin', '*');
   response.set('Access-Control-Allow-Methods', 'PUT,DELETE,GET,POST');
   response.set('Access-Control-Allow-Headers', 'Content-Type,API-KEY');
-  response.set('Access-Control-Allow-Credentials', 'true');
   next();
 };
 
