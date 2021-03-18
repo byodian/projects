@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-const LoginForm = ({ handleLogin }) => {
+const Login = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -11,11 +13,12 @@ const LoginForm = ({ handleLogin }) => {
     });
     setUsername('');
     setPassword('');
+    history.push('/notes');
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h1>Login</h1>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -43,4 +46,4 @@ const LoginForm = ({ handleLogin }) => {
   );
 };
 
-export default LoginForm;
+export default Login;

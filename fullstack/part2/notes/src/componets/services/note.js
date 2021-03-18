@@ -8,17 +8,11 @@ const setToken = newToken => {
 };
 
 const getAll = () => {
-  const request = axios.get(baseUrl, {
-    headers: {
-      'API-KEY': '123456788'
-    },
-    withCredentials: true
-  });
-
+  const request = axios.get(baseUrl);
   return request.then(response => response.data);
 };
 
-const create = newObject => {
+const create = (newObject) => {
   const config = {
     headers: { Authorization: token },
   };

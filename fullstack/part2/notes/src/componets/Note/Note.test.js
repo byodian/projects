@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import { prettyDOM } from '@testing-library/dom';
-import Note from './Note';
+import Note from '.';
 
 test('renders content', () => {
   const note = {

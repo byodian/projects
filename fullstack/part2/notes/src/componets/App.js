@@ -1,20 +1,35 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Note from './componets/Note';
 import noteService from './services/note';
 import loginService from './services/login';
-import Notification from './componets/Notification';
-import Footer from './componets/Footer';
-import LoginForm from './componets/LoginForm';
-import NoteForm from './componets/NoteForm';
-import Togglable from './componets/Togglable';
-import './index.css';
+import Notification from './Notification';
+import NoteForm from './NoteForm';
+import Footer from './Footer';
+import Togglable from './Togglable';
+import Login from './Page/Login';
+import Home from './Page/Home';
+import Notes from './Page/Notes';
+import Details from './Page/NoteDetails';
+import '../assets/reset.css';
+import '../assets/main.css';
+
+import {
+  Switch,
+  Route,
+  Redirect,
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
+  const history = useHistory();
   const noteFormRef = useRef();
+  const match = useRouteMatch('/notes/:id');
+  const note = match
+    ? notes.find(note => note.id === match.params.id)
+    : null;
 
   useEffect(() => {
     noteService
@@ -35,10 +50,6 @@ const App = () => {
       noteService.setToken(user.token);
     }
   }, []);
-
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important === true);
 
   const removeErrorMessage = (timer) => {
     setTimeout(() => {
@@ -79,8 +90,8 @@ const App = () => {
     try {
       const user = await loginService.login(userObject);
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user));
-      noteService.setToken(user.token);
       setUser(user);
+      noteService.setToken(user.token);
     } catch (exception) {
       setErrorMessage('Wrong credentials');
       removeErrorMessage(5000);
@@ -90,13 +101,8 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser');
     setUser(null);
+    history.push('/login');
   };
-
-  const loginForm = () => (
-    <Togglable buttonLabel="login">
-      <LoginForm handleLogin ={login} />
-    </Togglable>
-  );
 
   const noteForm = () => {
     return (
@@ -107,32 +113,39 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Notes</h1>
+    <div className="container">
       <Notification message={errorMessage} />
-
-      {user === null
-        ? loginForm()
-        : <div>
-          <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
-          {noteForm()}
-        </div>
-      }
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? 'important' : 'all'}
-        </button>
-      </div>
-      <ul>
-        {notesToShow.map(note =>
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        )}
-      </ul>
+      <Switch>
+        <Route path="/notes/:id">
+          <Details note={note} />
+        </Route>
+        <Route path="/notes">
+          {user
+            ? <Notes
+              notes={notes}
+              toggleImportanceOf={toggleImportanceOf}
+              handleLogout={handleLogout}>
+              {noteForm()}
+            </Notes>
+            : <Redirect to="/login" />
+          }
+        </Route>
+        <Route path="/demo">
+          <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} handleLogout={handleLogout}></Notes>
+        </Route>
+        <Route path="/login">
+          {user === null
+            ? <Login handleLogin ={login} />
+            : <Redirect to="/notes" />
+          }
+        </Route>
+        <Route path="/">
+          {user === null
+            ? <Home />
+            : <Redirect to="/notes" />
+          }
+        </Route>
+      </Switch>
       <Footer />
     </div>
   );

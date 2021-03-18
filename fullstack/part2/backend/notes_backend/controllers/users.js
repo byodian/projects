@@ -15,6 +15,19 @@ usersRouter.get('/', async (req, res, next) => {
   }
 });
 
+usersRouter.get('/:id', async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const user = await User.findById(id)
+      .populate('notes', { content: 1, date: 1 });
+
+    res.json(user);
+  } catch(exception) {
+    next(exception);
+  }
+});
+
 usersRouter.post('/', async (req, res, next) => {
   const body = req.body;
 

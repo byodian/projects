@@ -12,11 +12,6 @@ code {
     monospace;
 }
 
-#root {
-  width: 80%;
-  margin: 0 auto;
-}
-
 button {
   padding: 4px 8px;
   color: green;
@@ -30,9 +25,15 @@ button {
   padding: 2px;
 }
 
-h1 {
+h1,
+h2,
+h3,
+h4 {
   margin-top: 0;
-  color: green;
+}
+
+ul {
+  list-style-type: none;
 }
 
 .note {
