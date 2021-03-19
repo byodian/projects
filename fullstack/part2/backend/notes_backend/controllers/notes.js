@@ -76,6 +76,7 @@ notesRouter.post('/', async (request, response, next) => {
 
 notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body;
+  console.log(body);
 
   const note = {
     content: body.content,

@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useField } from '../../hooks';
 
 const Login = ({ handleLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const username = useField('text');
+  const password = useField('password');
   const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     handleLogin({
-      username, password
+      username: username.value,
+      password: password.value
     });
-    setUsername('');
-    setPassword('');
+    username.reset();
+    password.reset();
     history.push('/notes');
   };
 
@@ -23,20 +25,11 @@ const Login = ({ handleLogin }) => {
       <form onSubmit={handleSubmit}>
         <div>
           username
-          <input
-            id="username"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)} />
+          <input {...username} reset="username" />
         </div>
         <div>
           password
-          <input
-            id="password"
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)} />
+          <input {...password} reset="password" />
         </div>
         <div>
           <button id="login-button" type="submit">login in</button>

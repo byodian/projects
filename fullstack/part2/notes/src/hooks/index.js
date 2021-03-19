@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
 export const useField = (type) => {
   const [value, setValue] = useState('');
@@ -20,20 +19,38 @@ export const useField = (type) => {
   };
 };
 
-export const useResource = (baseUrl) => {
-  const [resources, setResources] = useState([]);
+export const useMessage = () => {
+  const [message, setMessage] = useState(null);
 
-  useEffect(async () => {
-    try {
-      const request = await axios.get(baseUrl);
-      setResources(request.data.notes);
-    } catch(error) {
-      console.log(error.message);
-    }
-  }, []);
-
-  const service = {
+  const handleMessge = (message) => {
+    setMessage(message);
   };
 
-  return [resources, service];
+  const removeMessage = (timer) => {
+    setTimeout(() => {
+      setMessage(null);
+    }, timer);
+  };
+
+  const helper = {
+    handleMessge,
+    removeMessage
+  };
+
+  return [message, helper];
+};
+
+export const useResource = () => {
+  const [resources, setResources] = useState([]);
+
+  // Initializing notes state when Notes page is firstly redered.
+  const handleNotes= notes => {
+    setResources(notes);
+  };
+
+  const helper = {
+    handleNotes,
+  };
+
+  return [resources, helper];
 };

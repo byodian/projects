@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useField } from '../../hooks';
 
 const NoteForm = ({ createNote }) => {
-  const [newNote, setNewNote] = useState('');
-
-  const handleChange = ({ target }) => {
-    setNewNote(target.value);
-  };
+  const note = useField('text');
 
   const addNote = async (event) => {
     event.preventDefault();
     createNote({
-      content: newNote,
+      content: note.value,
       important: false
     });
-    setNewNote('');
+    note.reset();
   };
 
   return (
     <div>
       <h2>Create a new note</h2>
       <form onSubmit={addNote}>
-        <input
-          id="note-input"
-          value={newNote}
-          onChange={handleChange}
-        />
+        <input {...note} reset="1"/>
         <button id ="save-button" type="submit">save</button>
       </form>
     </div>

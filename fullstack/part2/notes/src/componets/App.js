@@ -9,6 +9,7 @@ import Login from './Page/Login';
 import Home from './Page/Home';
 import Notes from './Page/Notes';
 import Details from './Page/NoteDetails';
+import { useResource, useMessage } from '../hooks';
 import '../assets/reset.css';
 import '../assets/main.css';
 
@@ -21,26 +22,11 @@ import {
 } from 'react-router-dom';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notes, { handleNotes }] = useResource();
+  const [demoNotes, demoHelper] = useResource();
+  const [message, { handleMessge, removeMessage }] = useMessage();
   const [user, setUser] = useState(null);
   const history = useHistory();
-  const noteFormRef = useRef();
-  const match = useRouteMatch('/notes/:id');
-  const note = match
-    ? notes.find(note => note.id === match.params.id)
-    : null;
-
-  useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes);
-      })
-      .catch(() => {
-        setErrorMessage('The service doesn\'t work');
-      });
-  }, []);
 
   useEffect(() => {
     const loggedNoteappUser = window.localStorage.getItem('loggedNoteappUser');
@@ -51,39 +37,40 @@ const App = () => {
     }
   }, []);
 
-  const removeErrorMessage = (timer) => {
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, timer);
+  // ref children compoments state
+  const noteFormRef = useRef();
+
+  // Route
+  const match = useRouteMatch('/notes/:id');
+  const note = match
+    ? notes.find(note => note.id === match.params.id)
+    : null;
+
+  const toggleImportanceOf = async id => {
+    const note = notes.find(n => n.id === id);
+    const changeNote = { ...note, important: !note.important };
+
+    try {
+      const returnedNote = await noteService.update(id, changeNote);
+      handleNotes(notes.map(note =>
+        note.id !== id ? note : returnedNote
+      ));
+    } catch(error) {
+      handleMessge(`Note "${note.content}" was already deleted from server`);
+      removeMessage(2000);
+      handleNotes(notes.filter(n => n.id !== id));
+    }
   };
 
   const addNote = async (noteObject) => {
     noteFormRef.current.toggleVisibility();
     try {
       const returnedNote = await noteService.create(noteObject);
-      setNotes(notes.concat(returnedNote));
+      handleNotes(notes.concat(returnedNote));
     } catch(exception) {
-      setErrorMessage('input can not be empty');
-      removeErrorMessage(5000);
+      handleMessge('input can not be empty');
+      removeMessage(5000);
     }
-  };
-
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id);
-    const changeNote = { ...note, important: !note.important };
-
-    noteService
-      .update(id, changeNote)
-      .then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote));
-      })
-      .catch(() => {
-        setErrorMessage(
-          `Note "${note.content}" was already deleted from server`
-        );
-        removeErrorMessage(5000);
-        setNotes(notes.filter(n => n.id !== id));
-      });
   };
 
   const login = async (userObject) => {
@@ -93,8 +80,8 @@ const App = () => {
       setUser(user);
       noteService.setToken(user.token);
     } catch (exception) {
-      setErrorMessage('Wrong credentials');
-      removeErrorMessage(5000);
+      handleMessge('wrong username or password');
+      removeMessage(2000);
     }
   };
 
@@ -112,26 +99,38 @@ const App = () => {
     );
   };
 
+  const notesProps = {
+    notes,
+    user,
+    handleNotes,
+    toggleImportanceOf,
+    handleLogout,
+  };
+
+  const demoProps = {
+    notes: demoNotes,
+    user: { username: 'test' },
+    handleNotes: demoHelper.handleNotes,
+    toggleImportanceOf,
+    handleLogout,
+  };
+
+
   return (
     <div className="container">
-      <Notification message={errorMessage} />
+      <Notification message={message} />
       <Switch>
         <Route path="/notes/:id">
           <Details note={note} />
         </Route>
         <Route path="/notes">
           {user
-            ? <Notes
-              notes={notes}
-              toggleImportanceOf={toggleImportanceOf}
-              handleLogout={handleLogout}>
-              {noteForm()}
-            </Notes>
+            ? <Notes {...notesProps}>{noteForm()}</Notes>
             : <Redirect to="/login" />
           }
         </Route>
         <Route path="/demo">
-          <Notes notes={notes} toggleImportanceOf={toggleImportanceOf} handleLogout={handleLogout}></Notes>
+          <Notes {...demoProps}></Notes>
         </Route>
         <Route path="/login">
           {user === null

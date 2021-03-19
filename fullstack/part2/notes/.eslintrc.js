@@ -47,7 +47,8 @@ module.exports = {
     ],
     'no-console': 0,
     'react/prop-types': 0,
-    'no-unused-vars': 'warn'
+    'no-unused-vars': 'warn',
+    'require-await': 'error'
   },
   'settings': {
     'react': {

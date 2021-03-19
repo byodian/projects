@@ -9,7 +9,6 @@ const Note = ({ note, toggleImportance }) => {
   return (
     <li className="note">
       <Link to={`/notes/${note.id}`}>{note.content}</Link>
-      <button className="btn-toggle" onClick={toggleImportance}>{label}</button>
     </li>
   );
 };
