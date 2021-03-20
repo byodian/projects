@@ -4,7 +4,7 @@ import { useField } from '../../hooks';
 const NoteForm = ({ createNote }) => {
   const note = useField('text');
 
-  const addNote = async (event) => {
+  const addNote = (event) => {
     event.preventDefault();
     createNote({
       content: note.value,

@@ -3,7 +3,6 @@ import noteService from './services/note';
 import loginService from './services/login';
 import Notification from './Notification';
 import NoteForm from './NoteForm';
-import Footer from './Footer';
 import Togglable from './Togglable';
 import Login from './Page/Login';
 import Home from './Page/Home';
@@ -145,7 +144,6 @@ const App = () => {
           }
         </Route>
       </Switch>
-      <Footer />
     </div>
   );
 };

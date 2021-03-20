@@ -1,6 +1,6 @@
 import React from 'react';
 import Nav from './Nav';
-import Logo from '../Logo';
+import Logo from '../../Logo';
 import styled from 'styled-components';
 
 const HeaderContainer = styled.div`

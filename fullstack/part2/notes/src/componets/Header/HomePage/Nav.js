@@ -6,7 +6,7 @@ import {
 
 const Nav = styled.nav`
   display: none;
-  height: 100%;
+  height: 100%; // 64px
 
   @media (min-width: 480px) {
     display: block;
@@ -15,29 +15,29 @@ const Nav = styled.nav`
 `;
 
 const ListContainer = styled.ul`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  height: 100%;
+  // align-items: stretch (by default)
+  // The flex items will stretch to fill the size of the cross axios
+  display: flex; 
+  height: 100%; // 64px
 `;
 
 const List = styled.li`
+  // The flex items will stretch to fill the size of the cross axios
   display: flex;
-  height: 100%;
+`;
 
-  a {
-    display: flex;
-    position: relative;
-    align-items: center;
-    padding: 0 var(--space-16);
-    border-top: 2px solid transparent;
-    border-bottom: 2px solid transparent;
+const StyledLink = styled(Link)`
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 0 var(--space-16);
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
 
-    &:hover {
-      color: var(--color-grey-08);
-      background-color: var(--color-grey-01);
-      border-bottom: 2px solid var(--main-color);
-    }
+  &:hover {
+    color: var(--color-grey-08);
+    background-color: var(--color-grey-01);
+    border-bottom: 2px solid var(--main-color);
   }
 `;
 
@@ -45,9 +45,9 @@ const HeaderNav = () => {
   return (
     <Nav>
       <ListContainer>
-        <List><Link to="/demo">Demo</Link></List>
-        <List><Link to="/">内测</Link></List>
-        <List><Link to="/login">登录</Link></List>
+        <List><StyledLink to="/demo">Demo</StyledLink></List>
+        <List><StyledLink to="/">内测</StyledLink></List>
+        <List><StyledLink to="/login">登录</StyledLink></List>
       </ListContainer>
     </Nav>
   );

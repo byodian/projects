@@ -15,11 +15,9 @@ code {
 }
 
 button {
-  padding: 4px 8px;
-  color: green;
-  border: 1px solid green;
-  border-radius: 2px;
-  background-color: transparent;
+  color: inherit;  
+  border: none;
+  outline: none;
 }
 
 .btn-toggle {
@@ -31,6 +29,11 @@ h1,
 h2,
 h3,
 h4 {
+  margin-top: 0;
+  line-height: 1.1;
+}
+
+p {
   margin-top: 0;
 }
 
@@ -47,7 +50,6 @@ a {
 
 img,
 video {
-  width: 100%;
   max-width: 100%;
   height: auto;
 }

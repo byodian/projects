@@ -67,6 +67,7 @@
   --radius-sm: 2.5px;
   --radius-md: 4px;
   --radius-lg: 8px;
+  --radius-xl: 16px;
   --space-4: 0.4rem;
   --space-8: 0.8rem;
   --space-12: 1.2rem;
@@ -77,6 +78,14 @@
   --space-64: 6.4rem;
   --space-96: 9.6rem;
   --space-128: 12.8rem;
+  --negative-space-35: -2.5rem;
+  --heading-sm-font-size: 1.8rem;
+  --heading-md-font-size: 2.4rem;
+  --heading-lg-font-size: 3.0rem;
+  --heading-xl-font-size: 3.8rem;
+  --heading-2xl-font-size: 4.4rem;
+  --heading-3xl-font-size: 4.8rem;
+  --heading-4xl-font-size: 6.4rem;
 }
 
 *,
@@ -96,6 +105,9 @@ body {
 }
 
 .container {
-  /* width: 1200px; */
   min-height: 100vh;
+}
+
+.text-align-center {
+  text-align: center;
 }
