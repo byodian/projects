@@ -63,13 +63,14 @@
   --color-perceptional-green: #6b8767;
   --color-perceptional-yellow: #ffc93e;
   --color-perceptional-pink: #ffada4;
+  --main-color: #B83A3A;
   --radius-sm: 2.5px;
   --radius-md: 4px;
   --radius-lg: 8px;
   --space-4: 0.4rem;
   --space-8: 0.8rem;
   --space-12: 1.2rem;
-  --sapce-16: 1.6rem;
+  --space-16: 1.6rem;
   --space-24: 2.4rem;
   --space-32: 3.2rem;
   --space-48: 4.8rem;
@@ -90,11 +91,11 @@ html {
 }
 
 body {
-  font-size: inherit;
+  font-size: 1.6rem;
   line-height: 1.5;
 }
 
 .container {
-  width: 80%;
-  margin: 2rem auto;
+  /* width: 1200px; */
+  min-height: 100vh;
 }

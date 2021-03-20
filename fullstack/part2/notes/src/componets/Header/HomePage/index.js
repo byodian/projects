@@ -8,7 +8,15 @@ const HeaderContainer = styled.div`
 
 const Header = styled.header`
   display: flex;
-  height: var(--space-48);
+  justify-content: center;
+  align-items: center;
+  height: var(--space-64);
+  
+  @media (min-width: 480px) {
+    justify-content: flex-start;
+    padding-left: var(--space-96);
+    padding-right: var(--space-96);
+  }
 `;
 
 const HomePageHeader = () => {
