@@ -1,12 +1,15 @@
 import styled, { css } from 'styled-components';
 
 const Button = styled.button`
-  margin: 0 1rem;
-  padding: 0.6rem 1.6rem;
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
   background-color: #333;
-  border-radius: var(--radius-xl);
-  font-size: 1.4px;
+  border-radius: var(--radius-lg);
+  font-size: var(--heading-sm-font-size);
+  white-space: nowrap;
+  min-width: 13rem;
   color: #fff;
+  text-align: center;
 
   ${props =>
     props.primary &&

@@ -9,6 +9,7 @@ import Feature1 from '../../assets/feature_1.svg';
 import Feature2 from '../../assets/feature_2.svg';
 import Feature3 from '../../assets/feature_3.svg';
 import FooterImgage from '../../assets/footer_1.svg';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   // Flex-items are stretched in cross axios (from left to right)
@@ -22,50 +23,75 @@ const Container = styled.div`
 const HeroHeading = styled.h1`
   margin-bottom: var(--space-12);
   font-size: var(--heading-2xl-font-size);
+  line-height: 1.2;
+  letter-spacing: 2px;
 `;
 
 const Section = styled.section`
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  padding: var(--space-48) var(--space-32);
+  padding-top: var(--space-48);
+  padding-bottom: var(--space-48);
+  padding-left: var(--space-8);
+  padding-right: var(--space-8);
   text-align: center;
+
+  @media (min-width: 320px) {
+    padding-left: var(--space-16);
+    padding-right: var(--space-16);
+  }
+
+  @media (min-width: 375px) {
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
 
   @media (min-width: 768px) {
     flex-direction: ${props => props.reverse ? 'row-reverse' : 'row' };
     text-align: left;
     align-items: center;
     justify-content: space-between;
-    padding-left: var(--space-64);
-    padding-right: var(--space-64);
-  }
-
-  @media (min-width: 1024px) {
-    padding-left: var(--space-96);
-    padding-right: var(--space-96);
+    padding-left: var(--space-48);
+    padding-right: var(--space-48);
   }
 
   @media (min-width: 1120px) {
+    // Avoid width being affected by automatic margins 
+    // becomeing smaller
     width: 100%;
     max-width: 1120px;
     margin: 0 auto;
   }
 `;
 
-const HeroSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-48) var(--space-24);
-  text-align: center;
+const HeroSection = styled(Section)`
 
   @media (min-width: 768px) {
-    padding-left: var(--space-48);
-    padding-right: var(--space-48);
+    flex-direction: column;
+    text-align: center;
   }
 `;
 
 const HeroWrapper = styled.div`
+  // the priority order on the z-axios copmared to normal elements
   position: relative;
-  margin-bottom: var(--negative-space-35);
+
+  @media (min-width: 540px) {
+    margin-bottom: var(--negative-space-15);
+  }
+
+  @media (min-width: 648px) {
+    margin-bottom: var(--negative-space-25);
+  }
+
+  @media (min-width: 848px) {
+    margin-bottom: var(--negative-space-35);
+  }
+  
+  @media (min-width: 1120px) {
+    margin-bottom: var(--negative-space-45);
+  }
 `;
 
 const FeatureHeading = styled.h2`
@@ -84,26 +110,12 @@ const ImgWrapper = styled.div`
   margin-bottom: ${props => props.hasJoinBtn ? 'var(--space-32)' : '0' };
 
   @media (min-width: 768px) {
-    justify-content: ${props => props.reverse ? 'flex-start' : 'flex-end' };
     margin-bottom: ${props => props.hasJoinBtn && '0' };
   }
 `;
 
 const Img = styled.img`
   display: block;
-  width: 75%;
-`;
-
-const HeroImg = styled(Img)`
-  width: 100%;
-`;
-
-const BottomImg = styled(Img)`
-  width: 100%;
-`;
-
-const ButtonWrapper = styled.div`
-  flex-basis: 126px;
 `;
 
 const Home = () => {
@@ -114,13 +126,13 @@ const Home = () => {
         <Container>
           <HeroSection>
             <HeroWrapper>
-              <HeroHeading>将想法装进 BOX</HeroHeading>
+              <HeroHeading>将想法装进BOX</HeroHeading>
               <FeatureDetail>毫无压力 想记就记</FeatureDetail>
-              <Button as="a" href="/login">立刻加入</Button>
+              <Button as={Link} to="/login">立刻加入</Button>
             </HeroWrapper>
             <div>
-              <HeroImg src={Hero} alt="使用 onebox 想记就记"/>
-              <HeroImg src={Placeholder} alt="使用 onebox 想记就记"/>
+              <Img src={Hero} alt="使用 onebox 想记就记"/>
+              <Img src={Placeholder} alt="使用 onebox 想记就记"/>
             </div>
           </HeroSection>
         </Container>
@@ -160,15 +172,15 @@ const Home = () => {
         <Container>
           <Section>
             <ImgWrapper hasJoinBtn reverse>
-              <BottomImg src={FooterImgage} alt="使用 onebox 想记就记"/>
+              <Img src={FooterImgage} alt="使用 onebox 想记就记"/>
             </ImgWrapper>
             <div className="text-align-center">
-              <FeatureHeading>将所有想法装进 BOX</FeatureHeading>
+              <FeatureHeading>将所有想法装进BOX</FeatureHeading>
               <FeatureDetail>毫无压力，想记就记</FeatureDetail>
             </div>
-            <ButtonWrapper>
-              <Button as="a" href="/login">立刻加入</Button>
-            </ButtonWrapper>
+            <div>
+              <Button as={Link} to="/login">立刻加入</Button>
+            </div>
           </Section>
         </Container>
       </main>

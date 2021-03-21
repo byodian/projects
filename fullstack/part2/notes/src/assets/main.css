@@ -78,7 +78,10 @@
   --space-64: 6.4rem;
   --space-96: 9.6rem;
   --space-128: 12.8rem;
-  --negative-space-35: -2.5rem;
+  --negative-space-15: -1.5rem;
+  --negative-space-25: -2.5rem;
+  --negative-space-35: -3.5rem;
+  --negative-space-45: -4.5rem;
   --heading-sm-font-size: 1.8rem;
   --heading-md-font-size: 2.4rem;
   --heading-lg-font-size: 3.0rem;
