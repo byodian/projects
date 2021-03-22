@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../Header/HomePage';
 import Footer from '../Footer';
 import styled from 'styled-components';
-import Button from '../Button';
+import { Button } from '../utilities/FormComponents';
 import Hero from '../../assets/hero.svg';
 import Placeholder from '../../assets/placeholder.svg';
 import Feature1 from '../../assets/feature_1.svg';

@@ -1,13 +1,13 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useField } from '../../hooks';
 import styled from 'styled-components';
+import { Link, useHistory } from 'react-router-dom';
+import { Button, Label, Input } from '../utilities/FormComponents';
+import { useField } from '../../hooks';
 import Logo from '../Logo';
-import Button from '../Button';
-import { Link } from 'react-router-dom';
+import Alert from '../Alert';
 
 const StyledLink = styled(Link)`
-  color: var(--main-color);
+  color: var(--main-color-highlight);
 `;
 
 const StyledButton = styled(Button)`
@@ -38,36 +38,8 @@ const FormDetail = styled.div`
   @media (min-width: 375px) {
     padding-left: var(--space-32);
     padding-right: var(--space-32);
-    border: 1px solid #333;
+    border: 1px solid var(--main-color);
     border-radius: var(--radius-md);
-  }
-`;
-
-const Label = styled.label`
-  font-weight: bold;
-  font-size: 1.4rem;
-  margin-bottom: var(--space-4);
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--radius-md);
-  border: 1px solid #333;
-
-  &::placeholder {
-    color: var(--color-grey-05);
-    font-size: 1.4rem;
-  }
-
-  &:focus:invalid {
-    /* border: 1px solid var(--main-color); */
-    outline-color: var(--main-color);
-  }
-
-  &:focus:valid {
-    outline-color: var(--color-green-05);
   }
 `;
 
@@ -86,8 +58,7 @@ const BreakLine = styled.div`
   margin-top: var(--space-48);
 `;
 
-
-const Login = ({ handleLogin }) => {
+const Login = ({ handleLogin, message }) => {
   const username = useField('text');
   const password = useField('password');
   const history = useHistory();
@@ -98,8 +69,6 @@ const Login = ({ handleLogin }) => {
       username: username.value,
       password: password.value
     });
-    username.reset();
-    password.reset();
     history.push('/notes');
   };
 
@@ -110,13 +79,13 @@ const Login = ({ handleLogin }) => {
       </LogoContainer>
       <FormDetail>
         <LoginHeading>登录</LoginHeading>
+        <Alert error message={message}>{message}</Alert>
         <form onSubmit={handleSubmit}>
           <div className="md-margin-bottom">
             <Label htmlFor="username">用户名</Label>
             <Input
               {...username}
               id="username"
-              reset="username"
               required
             />
           </div>
@@ -125,7 +94,6 @@ const Login = ({ handleLogin }) => {
             <Input
               {...password}
               id="password"
-              reset="password"
               required
             />
           </div>

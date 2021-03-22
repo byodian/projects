@@ -1,13 +1,12 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useField } from '../../hooks';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useField } from '../../hooks';
 import Logo from '../Logo';
-import Button from '../Button';
-import { Link } from 'react-router-dom';
+import { Button, Label, Input } from '../utilities/FormComponents';
 
 const StyledLink = styled(Link)`
-  color: var(--main-color);
+  color: var(--main-color-highlight);
 `;
 
 const StyledButton = styled(Button)`
@@ -43,34 +42,6 @@ const FormDetail = styled.div`
   }
 `;
 
-const Label = styled.label`
-  font-weight: bold;
-  font-size: 1.4rem;
-  margin-bottom: var(--space-4);
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--radius-md);
-  border: 1px solid #333;
-
-  &::placeholder {
-    color: var(--color-grey-05);
-    font-size: 1.4rem;
-  }
-
-  &:focus:invalid {
-    /* border: 1px solid var(--main-color); */
-    outline-color: var(--main-color);
-  }
-
-  &:focus:valid {
-    outline-color: var(--color-green-05);
-  }
-`;
-
 const LogoContainer = styled.div`
   padding: var(--space-32) var(--space-16);
 
@@ -86,7 +57,6 @@ const BreakLine = styled.div`
   margin-top: var(--space-48);
 `;
 
-
 const Register = ({ handleRegister }) => {
   const email = useField('email');
   const username = useField('text');
@@ -96,8 +66,6 @@ const Register = ({ handleRegister }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     handleRegister();
-    username.reset();
-    password.reset();
     history.push('/login');
   };
 
@@ -114,7 +82,6 @@ const Register = ({ handleRegister }) => {
             <Input
               {...email}
               id="email"
-              reset="email"
               required
             />
           </div>
@@ -123,7 +90,6 @@ const Register = ({ handleRegister }) => {
             <Input
               {...username}
               id="username"
-              reset="username"
               required
             />
           </div>
@@ -132,7 +98,6 @@ const Register = ({ handleRegister }) => {
             <Input
               {...password}
               id="password"
-              reset="password"
               required
             />
           </div>

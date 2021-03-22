@@ -64,12 +64,13 @@
   --color-perceptional-green: #6b8767;
   --color-perceptional-yellow: #ffc93e;
   --color-perceptional-pink: #ffada4;
-  --main-color: #B83A3A;
-  --main-color-dark: #a52323;
+  --main-color: #333;
+  --main-color-highlight: #b82d2d;
   --radius-sm: 2.5px;
   --radius-md: 4px;
   --radius-lg: 8px;
   --radius-xl: 16px;
+  --radius-xl: 20px;
   --space-4: 0.4rem;
   --space-8: 0.8rem;
   --space-12: 1.2rem;

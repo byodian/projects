@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import noteService from './services/note';
 import loginService from './services/login';
-import Notification from './Notification';
 import NoteForm from './NoteForm';
 import Togglable from './Togglable';
 import Login from './Page/Login';
@@ -80,8 +79,8 @@ const App = () => {
       setUser(user);
       noteService.setToken(user.token);
     } catch (exception) {
-      handleMessge('wrong username or password');
-      removeMessage(2000);
+      handleMessge('用户名或密码不正确');
+      // removeMessage(2000);
     }
   };
 
@@ -122,7 +121,6 @@ const App = () => {
 
   return (
     <div className="container">
-      <Notification message={message} />
       <Switch>
         <Route path="/notes/:id">
           <Details note={note} />
@@ -138,7 +136,7 @@ const App = () => {
         </Route>
         <Route path="/login">
           {user === null
-            ? <Login handleLogin={login} />
+            ? <Login handleLogin={login} message={message}/>
             : <Redirect to="/notes" />
           }
         </Route>
