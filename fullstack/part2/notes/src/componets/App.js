@@ -5,6 +5,7 @@ import Notification from './Notification';
 import NoteForm from './NoteForm';
 import Togglable from './Togglable';
 import Login from './Page/Login';
+import Register from './Page/Register';
 import Home from './Page/Home';
 import Notes from './Page/Notes';
 import Details from './Page/NoteDetails';
@@ -84,6 +85,10 @@ const App = () => {
     }
   };
 
+  const register = () => {
+    console.log(123);
+  };
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser');
     setUser(null);
@@ -133,9 +138,12 @@ const App = () => {
         </Route>
         <Route path="/login">
           {user === null
-            ? <Login handleLogin ={login} />
+            ? <Login handleLogin={login} />
             : <Redirect to="/notes" />
           }
+        </Route>
+        <Route path="/register">
+          <Register handleRegister={register} />
         </Route>
         <Route path="/">
           {user === null

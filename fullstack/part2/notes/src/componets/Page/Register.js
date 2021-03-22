@@ -87,20 +87,18 @@ const BreakLine = styled.div`
 `;
 
 
-const Login = ({ handleLogin }) => {
+const Register = ({ handleRegister }) => {
+  const email = useField('email');
   const username = useField('text');
   const password = useField('password');
   const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleLogin({
-      username: username.value,
-      password: password.value
-    });
+    handleRegister();
     username.reset();
     password.reset();
-    history.push('/notes');
+    history.push('/login');
   };
 
   return (
@@ -109,8 +107,17 @@ const Login = ({ handleLogin }) => {
         <Logo />
       </LogoContainer>
       <FormDetail>
-        <LoginHeading>登录</LoginHeading>
+        <LoginHeading>注册</LoginHeading>
         <form onSubmit={handleSubmit}>
+          <div className="md-margin-bottom">
+            <Label htmlFor="email">邮箱地址</Label>
+            <Input
+              {...email}
+              id="email"
+              reset="email"
+              required
+            />
+          </div>
           <div className="md-margin-bottom">
             <Label htmlFor="username">用户名</Label>
             <Input
@@ -130,16 +137,16 @@ const Login = ({ handleLogin }) => {
             />
           </div>
           <div>
-            <StyledButton id="login-button" type="submit">登录</StyledButton>
+            <StyledButton id="login-button" type="submit">注册</StyledButton>
           </div>
         </form>
         <BreakLine></BreakLine>
         <div className="md-margin-top text-align-center sm1-font-size">
-          <p>还没有账号？<StyledLink to="/register">注册</StyledLink></p>
+          <p>已有账号？<StyledLink to="/login">登录</StyledLink></p>
         </div>
       </FormDetail>
     </Container>
   );
 };
 
-export default Login;
+export default Register;

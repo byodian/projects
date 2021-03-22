@@ -54,6 +54,16 @@ video {
   height: auto;
 }
 
+input {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+label {
+  display: block;
+}
+
 .error {
   color: rgb(255, 0, 0);
   font-size: 20px;

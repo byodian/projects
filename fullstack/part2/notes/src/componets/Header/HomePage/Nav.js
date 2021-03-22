@@ -46,7 +46,7 @@ const HeaderNav = () => {
     <Nav>
       <ListContainer>
         <List><StyledLink to="/demo">Demo</StyledLink></List>
-        <List><StyledLink to="/">内测</StyledLink></List>
+        <List><StyledLink to="/register">内测</StyledLink></List>
         <List><StyledLink to="/login">登录</StyledLink></List>
       </ListContainer>
     </Nav>

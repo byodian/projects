@@ -128,7 +128,7 @@ const Home = () => {
             <HeroWrapper>
               <HeroHeading>将想法装进BOX</HeroHeading>
               <FeatureDetail>毫无压力 想记就记</FeatureDetail>
-              <Button as={Link} to="/login">立刻加入</Button>
+              <Button as={Link} to="/register">立刻加入</Button>
             </HeroWrapper>
             <div>
               <Img src={Hero} alt="使用 onebox 想记就记"/>
@@ -179,7 +179,7 @@ const Home = () => {
               <FeatureDetail>毫无压力，想记就记</FeatureDetail>
             </div>
             <div>
-              <Button as={Link} to="/login">立刻加入</Button>
+              <Button as={Link} to="/register">立刻加入</Button>
             </div>
           </Section>
         </Container>
