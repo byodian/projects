@@ -52,3 +52,12 @@ export const Button = styled.button`
   `}
 `;
 
+export const IconButton = styled.button`
+  display: flex;
+  border-radius: var(--radius-sm);
+  padding: var(--space-4); 
+
+  &:hover {
+    background-color: var(--color-grey-02);
+  }
+`;

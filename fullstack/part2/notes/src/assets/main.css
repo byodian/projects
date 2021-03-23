@@ -71,6 +71,7 @@
   --radius-lg: 8px;
   --radius-xl: 16px;
   --radius-xl: 20px;
+  --space-2: 0.2rem;
   --space-4: 0.4rem;
   --space-8: 0.8rem;
   --space-12: 1.2rem;
@@ -132,4 +133,42 @@ body {
 
 .focus {
   transform: translateY(0);
+}
+
+.user-menu {
+  position: absolute;
+  right: var(--space-4);
+  top: 3.0rem;
+  width: 10rem;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+  border: 1px solid var(--main-color);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+}
+
+.left-menu-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-back-05);
+  min-height: 100vh;
+}
+
+.left-menu-container {
+  background-color: var(--color-grey-02);
+  width: 60%;
+  min-height: 100vh;
+}
+
+.left-menu-header {
+  display: flex;
+  align-items: center;
+  height: var(--space-48);
+  padding-left: var(--space-16);
+  margin-bottom: var(--space-12);
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid var(--main-color);
 }
