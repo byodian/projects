@@ -3,8 +3,9 @@ import noteService from './services/note';
 import loginService from './services/login';
 import NoteForm from './NoteForm';
 import Togglable from './Togglable';
-import Login from './Page/Login';
-import Register from './Page/Register';
+import Login from './Page/Form/Login';
+import Register from './Page/Form/Register';
+import Form from './Page/Form';
 import Home from './Page/Home';
 import Notes from './Page/Notes';
 import Details from './Page/NoteDetails';
@@ -80,7 +81,7 @@ const App = () => {
       noteService.setToken(user.token);
     } catch (exception) {
       handleMessge('用户名或密码不正确');
-      // removeMessage(2000);
+      removeMessage(4000);
     }
   };
 
@@ -136,12 +137,18 @@ const App = () => {
         </Route>
         <Route path="/login">
           {user === null
-            ? <Login handleLogin={login} message={message}/>
+            ? (
+              <Form heading="登录" message={message}>
+                <Login handleLogin={login}/>
+              </Form>
+            )
             : <Redirect to="/notes" />
           }
         </Route>
         <Route path="/register">
-          <Register handleRegister={register} />
+          <Form message={message} heading="注册">
+            <Register handleRegister={register}/>
+          </Form>
         </Route>
         <Route path="/">
           {user === null

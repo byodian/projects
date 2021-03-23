@@ -12,6 +12,7 @@ export const Input = styled.input`
   padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-md);
   border: 1px solid #333;
+  outline: none;
 
   &::placeholder {
     color: var(--color-grey-05);
@@ -19,12 +20,11 @@ export const Input = styled.input`
   }
 
   &:focus:invalid {
-    /* border: 1px solid var(--main-color); */
-    outline-color: var(--main-color);
+    border-color: var(--main-color-highlight);
   }
 
   &:focus:valid {
-    outline-color: var(--color-green-05);
+    border-color: var(--color-green-05);
   }
 `;
 

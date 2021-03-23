@@ -140,7 +140,7 @@ const Home = () => {
           <Section>
             <div>
               <FeatureHeading>不分类别，随时记录</FeatureHeading>
-              <FeatureDetail>告别分类整理带给自己的压力，尽情记录</FeatureDetail>
+              <FeatureDetail>告别分类整理的压力，尽情记录</FeatureDetail>
             </div>
             <ImgWrapper>
               <Img src={Feature1} alt="使用 onebox 想记就记"/>
@@ -151,7 +151,7 @@ const Home = () => {
           <Section reverse>
             <div>
               <FeatureHeading>回顾过去，轻松创意</FeatureHeading>
-              <FeatureDetail>定期回顾以往记录的内容，常常可以获得新的视角和想法</FeatureDetail>
+              <FeatureDetail>定期回顾，从中获取新的视角和想法</FeatureDetail>
             </div>
             <ImgWrapper reverse>
               <Img src={Feature2} alt="使用 onebox 想记就记"/>
@@ -161,8 +161,8 @@ const Home = () => {
         <Container backgroundColor>
           <Section>
             <div>
-              <FeatureHeading>通过标签，快速查找笔记</FeatureHeading>
-              <FeatureDetail>添加自定义标签，帮助你快速查找笔记</FeatureDetail>
+              <FeatureHeading>添加标签，方便查找</FeatureHeading>
+              <FeatureDetail>通过自定义标签，快速查找笔记</FeatureDetail>
             </div>
             <ImgWrapper>
               <Img src={Feature3} alt="使用 onebox 想记就记"/>
