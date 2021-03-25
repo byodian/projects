@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const noteSchema = new mongoose.Schema({
   content: {
     type: String,
-    minlength: 5,
+    minlength: 8,
     required: true
   },
   date: {
