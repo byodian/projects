@@ -7,18 +7,17 @@ export const NoteItem = styled.li`
 
 export const NoteLink = styled(Link)`
   display: block;
-  padding: var(--space-8);
-  /* border: 1px solid var(--main-color); */
+  padding: var(--space-16);
   background-color: #fff;
   border-radius: var(--radius-md);
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
-    background-color: var(--color-grey-02);
+    background-color: var(--color-grey-03);
   }
 
   &:focus {
-    background-color: var(--color-grey-03);
+    background-color: var(--color-grey-04);
   }
 `;
 

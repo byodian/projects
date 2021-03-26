@@ -9,9 +9,8 @@ const HomeHeader = () => {
         <Logo />
         <Nav>
           <NavItems>
-            <NavItem><NavLink to="/demo">Demo</NavLink></NavItem>
-            <NavItem><NavLink to="/register">内测</NavLink></NavItem>
             <NavItem><NavLink to="/login">登录</NavLink></NavItem>
+            <NavItem><NavLink to="/register">注册</NavLink></NavItem>
           </NavItems>
         </Nav>
       </Header>

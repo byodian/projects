@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import noteService from './components/services/note';
 import loginService from './components/services/login';
 import NoteForm from './components/NoteForm';
-import Login from './Page/Form/Login';
-import Register from './Page/Form/Register';
-import Form from './Page/Form';
-import Home from './Page/Home';
-import Notes from './Page/Notes';
-import Details from './components/Details';
-import Sidebar from './components/Siderbar';
-import Header from './components/Header/NotesPage';
-import { useResource, useMessage } from './hooks';
+import Login from './page/Form/Login';
+import Register from './page/Form/Register';
+import Form from './page/Form';
+import Home from './page/Home';
+import Notes from './page/Notes';
+import Details from './page/Details';
+import NotesContainer from './components/NotesContainer';
+import { useResource, useMessage, useVisibility } from './hooks';
 import './assets/styles/main.scss';
 import { Container } from './AppElements';
 import {
@@ -22,12 +21,18 @@ import {
 } from 'react-router-dom';
 
 const App = () => {
-  const [notes, { handleNotes }] = useResource();
-  const [demoNotes, demoHelper] = useResource();
-  const [message, { handleMessge, removeMessage }] = useMessage();
+  const [notes, { handleNotes }] = useResource([]);
+  const [message, { handleMessage, removeMessage, severity }] = useMessage();
   const [user, setUser] = useState(null);
-  const [open, setOpen] = useState(false);
+  const modal = useVisibility(false);
+  const sidebar = useVisibility(false);
   const history = useHistory();
+
+  const compare = (a, b) => {
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return 0;
+  };
 
   useEffect(() => {
     const loggedNoteappUser = window.localStorage.getItem('loggedNoteappUser');
@@ -40,33 +45,16 @@ const App = () => {
 
   // Route
   const match = useRouteMatch('/notes/:id');
-
-  const note = match
-    ? notes.find(note => note.id === match.params.id)
-    : null;
-
-  const toggleImportanceOf = async id => {
-    const note = notes.find(n => n.id === id);
-    const changeNote = { ...note, important: !note.important };
-
-    try {
-      const returnedNote = await noteService.update(id, changeNote);
-      handleNotes(notes.map(note =>
-        note.id !== id ? note : returnedNote
-      ));
-    } catch(error) {
-      handleMessge(`Note "${note.content}" was already deleted from server`);
-      removeMessage(2000);
-      handleNotes(notes.filter(n => n.id !== id));
-    }
-  };
+  const id = match ? match.params.id : null;
 
   const addNote = async (noteObject) => {
     try {
       const returnedNote = await noteService.create(noteObject);
-      handleNotes(notes.concat(returnedNote));
+      handleNotes(notes.concat(returnedNote).sort(compare));
+      handleMessage('保存成功', 'success');
+      removeMessage(2000);
     } catch(exception) {
-      handleMessge('内容不能为空或字数不能少于八');
+      handleMessage('内容不能为空或字数不能少于八', 'error');
       removeMessage(2000);
     }
   };
@@ -77,8 +65,10 @@ const App = () => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user));
       setUser(user);
       noteService.setToken(user.token);
+      handleMessage('登录成功', 'success');
+      removeMessage(2000);
     } catch (exception) {
-      handleMessge('用户名或密码不正确');
+      handleMessage('用户名或密码不正确', 'error');
       removeMessage(4000);
     }
   };
@@ -91,10 +81,6 @@ const App = () => {
     window.localStorage.removeItem('loggedNoteappUser');
     setUser(null);
     history.push('/login');
-  };
-
-  const handleOpen = () => {
-    setOpen(!open);
   };
 
   const loginPage = () => (
@@ -119,37 +105,42 @@ const App = () => {
   const notesProps = {
     notes,
     user,
-    open,
     handleNotes,
     message,
-    toggleImportanceOf,
-    handleLogout,
-    handleOpen,
-    getLocalDate
+    severity,
+    getLocalDate,
+    compare
   };
 
-  const demoProps = {
-    notes: demoNotes,
-    open,
-    user: { username: 'test' },
+  const custom = {
+    open: sidebar.visibility,
+    handleOpen: sidebar.handleVisibility,
+    handleLogout,
     message,
-    handleNotes: demoHelper.handleNotes,
-    toggleImportanceOf,
-    handleLogout,
-    handleOpen,
+    severity,
+    createNote: addNote,
+    handleShow: modal.handleVisibility,
+    show: modal.visibility
   };
 
-  const notesPage = () => (
-    <Container isOpen={open}>
-      <Notes {...notesProps}>
-        <NoteForm createNote={addNote} />
-      </Notes>
+  const showNotesPage = () => (
+    <Container isOpen={sidebar.visibility}>
+      <NotesContainer {...custom}>
+        <Notes {...notesProps}>
+          <NoteForm createNote={addNote} />
+        </Notes>
+      </NotesContainer>
     </Container>
   );
 
-  const demoPage = () => (
-    <Container isOpen={open}>
-      <Notes {...demoProps}></Notes>
+  const showDetailsPage = () => (
+    <Container>
+      <NotesContainer {...custom}>
+        <Details
+          id={id}
+          getLocalDate={getLocalDate}
+        />
+      </NotesContainer>
     </Container>
   );
 
@@ -157,23 +148,10 @@ const App = () => {
     <>
       <Switch>
         <Route path="/notes/:id">
-          <Container>
-            <Sidebar isOpen={open} handleOpen={handleOpen}/>
-            <Header
-              handleLogout={handleLogout}
-              handleClick={handleOpen}
-            />
-            <Details
-              note={note}
-              getLocalDate={getLocalDate}
-            />
-          </Container>
+          {showDetailsPage()}
         </Route>
         <Route path="/notes">
-          { user ? notesPage() : <Redirect to="/login" /> }
-        </Route>
-        <Route path="/demo">
-          {demoPage()}
+          { user ? showNotesPage() : <Redirect to="/login" /> }
         </Route>
         <Route path="/login">
           { user === null ? loginPage() : <Redirect to="/notes" /> }

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FaTimes } from 'react-icons/fa';
 
 export const SidebarContainer = styled.nav`
   --width: 18.0rem;
@@ -17,19 +16,6 @@ export const SidebarContainer = styled.nav`
 
   @media screen and (min-width: 424px) {
   }
-`;
-
-export const CloseIcon = styled(FaTimes)`
-  cursor: pointer;
-`;
-
-export const Icon = styled.div`
-  display: flex;
-  align-items: center;
-  height: var(--space-48);
-  padding-left: var(--space-16);
-  margin-bottom: var(--space-16);
-  font-size: 2rem;
 `;
 
 export const SidebarWrap = styled.div`

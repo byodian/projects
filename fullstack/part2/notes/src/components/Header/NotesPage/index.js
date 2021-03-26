@@ -3,9 +3,6 @@ import { MenuButton, MenuText, HamburgerButton  } from '../../StyledElements/But
 import {
   Header,
   Nav,
-  BreakLine,
-  Theme,
-  ThemeButton,
   Img,
   ImgButton,
   MenuContainer
@@ -23,11 +20,6 @@ const DropDown = ({ handleLogout }) => {
         </svg>
         <MenuText>退出</MenuText>
       </MenuButton>
-      <BreakLine />
-      <Theme>
-        <ThemeButton></ThemeButton>
-        <ThemeButton theme={{ color: 'dark' }} space></ThemeButton>
-      </Theme>
     </MenuContainer>
   );
 };

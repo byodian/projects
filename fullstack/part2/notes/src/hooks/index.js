@@ -21,9 +21,11 @@ export const useField = (type) => {
 
 export const useMessage = () => {
   const [message, setMessage] = useState(null);
+  const [severity, setSeverity] = useState('');
 
-  const handleMessge = (message) => {
+  const handleMessage = (message, severityType) => {
     setMessage(message);
+    setSeverity(severityType);
   };
 
   const removeMessage = (timer) => {
@@ -33,15 +35,16 @@ export const useMessage = () => {
   };
 
   const helper = {
-    handleMessge,
-    removeMessage
+    handleMessage,
+    removeMessage,
+    severity
   };
 
   return [message, helper];
 };
 
-export const useResource = () => {
-  const [resources, setResources] = useState([]);
+export const useResource = (type) => {
+  const [resources, setResources] = useState(type);
 
   // Initializing notes state when Notes page is firstly redered.
   const handleNotes= notes => {
@@ -53,4 +56,17 @@ export const useResource = () => {
   };
 
   return [resources, helper];
+};
+
+export const useVisibility = (bool) => {
+  const [visibility, setVisibility] = useState(bool);
+
+  const handleVisibility = () => {
+    setVisibility(!visibility);
+  };
+
+  return {
+    visibility,
+    handleVisibility
+  };
 };
