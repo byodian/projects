@@ -6,6 +6,9 @@ const notesRouter = require('./controllers/notes');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
+const path = require('path');
+const staticPath = path.resolve(__dirname, 'build', 'index.html');
+
 const mongoose = require('mongoose');
 
 logger.info('connecting to', config.MONGODB_URL);
@@ -23,6 +26,7 @@ mongoose
     logger.error('error connectiong to MongoDB:', error.message);
   });
 
+
 app.use(express.static('build'));
 app.use(middleware.setHeaders);
 app.use(express.json());
@@ -37,7 +41,7 @@ if(process.env.NODE_ENV === 'test') {
   app.use('/api/testing', testingRouter);
 }
 
-app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
+app.use(middleware.frontendRequest(staticPath));
 
 module.exports = app;

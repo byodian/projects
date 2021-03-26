@@ -8,6 +8,10 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+const frontendRequest = path => (request, response) => {
+  response.sendFile(path);
+};
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
@@ -45,5 +49,6 @@ module.exports = {
   requestLogger,
   setHeaders,
   errorHandler,
-  unknownEndpoint
+  unknownEndpoint,
+  frontendRequest
 };
