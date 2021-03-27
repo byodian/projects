@@ -7,6 +7,7 @@ import {
   ImgButton,
   MenuContainer
 } from './NotesHeaderElements';
+import { Hamburger } from '../../StyledElements/Icon';
 import Author from '../../../assets/author.png';
 
 const DropDown = ({ handleLogout }) => {
@@ -31,11 +32,7 @@ const NotesHeader = ({ handleLogout, handleClick }) => {
     <>
       <Header>
         <HamburgerButton  onClick={handleClick}>
-          <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 9H20" stroke="#333333"/>
-            <path d="M0 1H20" stroke="#333333"/>
-            <path d="M20 17L-2.98023e-07 17" stroke="#333333"/>
-          </svg>
+          <Hamburger></Hamburger>
         </HamburgerButton>
         <Nav>
           <ImgButton onClick={() => setShow(!show)}>

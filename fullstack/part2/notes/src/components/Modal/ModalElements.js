@@ -28,9 +28,8 @@ export const IconWrap = styled(Icon)`
     right: 20%;
   }
 `;
+
 export const ModalCloseIcon = styled(CloseIcon)`
-  width: 24px;
-  height: 24px;
   fill: #fff;
 `;
 

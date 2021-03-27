@@ -1,11 +1,4 @@
 import styled from 'styled-components';
-import { BsPlus } from 'react-icons/bs';
-
-export const PlusIcon = styled(BsPlus)`
-  width: 24px;
-  height: 24px;
-  fill: var(--main-color-highlight);
-`;
 
 export const FloatingContainer = styled.div`
   position: fixed;

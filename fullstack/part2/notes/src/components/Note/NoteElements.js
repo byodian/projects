@@ -19,6 +19,15 @@ export const NoteLink = styled(Link)`
   &:focus {
     background-color: var(--color-grey-04);
   }
+
+  a {
+      text-decoration: underline;
+  }
+
+  ul {
+    padding: 0 4.0rem;
+    list-style-type: disc;
+  }
 `;
 
 export const NoteContent = styled.div``;

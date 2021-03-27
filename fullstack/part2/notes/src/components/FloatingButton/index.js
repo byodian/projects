@@ -1,5 +1,6 @@
 import React from 'react';
-import { FloatingContainer, FloatingActionButton, PlusIcon } from './FloatingElements';
+import { FloatingContainer, FloatingActionButton } from './FloatingElements';
+import { PlusIcon } from '../StyledElements/Icon';
 
 const FloatingButton = ({ handleClick }) => {
 

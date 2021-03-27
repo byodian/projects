@@ -10,7 +10,7 @@ import {
   SidebarMenu,
   SidebarWrap
 } from './SidebarElements';
-import { Icon, CloseIcon } from '../StyledElements/Icon';
+import { Icon, Hamburger } from '../StyledElements/Icon';
 
 const SidebarItemWrap = (props) => {
   return (
@@ -30,7 +30,7 @@ const Siderbar = ({ isOpen, handleOpen }) => {
   return (
     <SidebarContainer isOpen={isOpen}>
       <Icon>
-        <CloseIcon onClick={handleOpen}/>
+        <Hamburger onClick={handleOpen}/>
       </Icon>
       <SidebarWrap>
         <SidebarMenu>
