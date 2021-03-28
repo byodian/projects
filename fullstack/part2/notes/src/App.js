@@ -59,6 +59,19 @@ const App = () => {
     }
   };
 
+  const toggleLikeOf = async (id) => {
+    const note = notes.find(note => note.id === id);
+    const changedNote = { ...note, like: !note.like };
+
+    try {
+      const updatedNote = await noteService.update(id, changedNote);
+      handleNotes(notes.map(n => n.id !== id ? n : updatedNote));
+    } catch(error) {
+      handleMessage('更新失败', 'error');
+      removeMessage(2000);
+    }
+  };
+
   const login = async (userObject) => {
     try {
       const user = await loginService.login(userObject);
@@ -109,7 +122,8 @@ const App = () => {
     message,
     severity,
     getLocalDate,
-    compare
+    compare,
+    toggleLikeOf
   };
 
   const custom = {
@@ -134,7 +148,7 @@ const App = () => {
   );
 
   const showDetailsPage = () => (
-    <Container>
+    <Container isOpen={sidebar.visibility}>
       <NotesContainer {...custom}>
         <Details
           id={id}

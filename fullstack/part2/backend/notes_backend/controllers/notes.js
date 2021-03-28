@@ -58,7 +58,7 @@ notesRouter.post('/', async (request, response, next) => {
   const user = await User.findById(decodedToken.id);
   const note = new Note({
     content: body.content,
-    important: body.important || false,
+    like: false,
     date: new Date(),
     user: user._id
   });
@@ -80,7 +80,7 @@ notesRouter.put('/:id', async (request, response, next) => {
 
   const note = {
     content: body.content,
-    important: body.important
+    like: body.like
   };
 
   try {

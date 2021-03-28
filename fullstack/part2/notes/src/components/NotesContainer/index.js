@@ -3,17 +3,24 @@ import Header from '../Header/NotesPage';
 import Sidebar from '../Siderbar';
 import Modal from '../Modal';
 import FloatingButton from '../FloatingButton';
+import { Main, Content, ContentWrap } from './NotesContainerElements';
 
 const NotesContainer = (props) => {
   const { open, handleOpen, handleLogout, createNote, message, severity, show, handleShow } = props;
   return (
     <>
-      <Sidebar isOpen={open} handleOpen={handleOpen}/>
       <Header
         handleLogout={handleLogout}
         handleClick={handleOpen}
       />
-      {props.children}
+      <Main>
+        <Sidebar isOpen={open} handleOpen={handleOpen}/>
+        <ContentWrap isOpen={open}>
+          <Content>
+            {props.children}
+          </Content>
+        </ContentWrap>
+      </Main>
       <Modal
         createNote={createNote}
         message={message}

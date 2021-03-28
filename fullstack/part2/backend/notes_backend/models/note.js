@@ -10,7 +10,7 @@ const noteSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  important: Boolean,
+  like: Boolean,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

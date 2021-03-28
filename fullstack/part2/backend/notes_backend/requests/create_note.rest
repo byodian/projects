@@ -3,5 +3,5 @@ Content-Type: application/json
 
 {
   "content": "lyj is drawing by ipad at her desk",
-  "important": false
+  "like": false
 }

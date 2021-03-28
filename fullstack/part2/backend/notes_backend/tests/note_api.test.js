@@ -75,7 +75,7 @@ describe('addition of a new note', () => {
   test('succeeds with valid data', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
-      important: true,
+      like: true,
     };
 
     const rootuser = {
@@ -109,7 +109,7 @@ describe('addition of a new note', () => {
 
   test('fails with status code 400 if data is invaild', async () => {
     const newNote = {
-      important : true,
+      like : true,
     };
 
     const rootuser = {
@@ -137,7 +137,7 @@ describe('addition of a new note', () => {
     const notesAtStart = await helper.notesInDb();
     const newNote = {
       content: 'This note is not added',
-      important: false
+      like: false
     };
 
     await api
@@ -178,7 +178,7 @@ describe('updating a specific note', () => {
     
     const newNote = {
       content: 'JavaScript is hard',
-      important: true
+      like: true
     };
 
     const resultNote = await api

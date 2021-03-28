@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Note from '../../components/Note';
 import noteService from '../../components/services/note';
 import Alert from '../../components/StyledElements/Alert';
-import { Main, NoteItems } from './NotesElements';
+import { NoteItems } from './NotesElements';
 
 const Notes = ({
   notes,
@@ -12,7 +12,8 @@ const Notes = ({
   severity,
   handleNotes,
   getLocalDate,
-  compare
+  compare,
+  toggleLikeOf
 }) => {
 
   useEffect(async () => {
@@ -27,7 +28,7 @@ const Notes = ({
   }, []);
 
   return (
-    <Main>
+    <>
       <Alert severity={severity} message={message}>{message}</Alert>
       {children}
       <NoteItems>
@@ -36,10 +37,14 @@ const Notes = ({
             key={note.id}
             note={note}
             getLocalDate={getLocalDate}
+            toggleLike={(event) => {
+              event.stopPropagation();
+              toggleLikeOf(note.id);
+            }}
           />
         )}
       </NoteItems>
-    </Main>
+    </>
   );
 };
 

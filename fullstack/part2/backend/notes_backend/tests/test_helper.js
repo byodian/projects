@@ -5,12 +5,12 @@ const initialNotes = [
   {
     content: 'HTML is easy',
     date: new Date(),
-    important: false,
+    like: false,
   },
   {
     content: 'Browser can excute only JavaScript',
     date: new Date(),
-    important: true
+    like: true
   }
 ];
 

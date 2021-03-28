@@ -1,23 +1,23 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 export const NoteItem = styled.li`
   margin-bottom: var(--space-16);
 `;
 
-export const NoteLink = styled(Link)`
+export const NoteContentWrap = styled.div`
   display: block;
   padding: var(--space-16);
   background-color: #fff;
   border-radius: var(--radius-md);
+  cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
-    background-color: var(--color-grey-03);
+    background-color: var(--color-grey-02);
   }
 
   &:focus {
-    background-color: var(--color-grey-04);
+    background-color: var(--color-grey-03);
   }
 
   a {
@@ -38,3 +38,27 @@ export const NoteTime = styled.time`
   color: var(--color-grey-06);
   margin-bottom: var(--space-16);
 `;
+
+export const NoteButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const IconWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: rgba(238, 82, 68, 0.1);
+  }
+
+  &:hover svg {
+    color: var(--color-red-03);
+  }
+`;
+
+

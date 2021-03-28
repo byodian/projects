@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 export const Container = styled.div`
   position: relative;
-
   background-color: var(--color-grey-01);
 
   &::before {
@@ -16,5 +15,10 @@ export const Container = styled.div`
     background-color: var(--color-back-07);
     transition: all 0.5s ease-out;
     z-index: 399;
+
+    @media screen and (min-width: 768px) {
+      display: none;
+      
+    }
   }
 `;
