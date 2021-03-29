@@ -11,6 +11,7 @@ const noteSchema = new mongoose.Schema({
     required: true
   },
   like: Boolean,
+  tags: [String],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

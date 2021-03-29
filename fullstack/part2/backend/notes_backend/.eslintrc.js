@@ -30,6 +30,7 @@ module.exports = {
     'eqeqeq': ['warn', 'allow-null'],
     'no-console': 'off',
     'object-curly-spacing': ['error', 'always'],
-    'arrow-spacing': ['error', { before: true, after: true }]
+    'arrow-spacing': ['error', { before: true, after: true }],
+    'require-await': 'error'
   }
 };

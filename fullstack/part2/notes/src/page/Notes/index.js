@@ -13,7 +13,8 @@ const Notes = ({
   handleNotes,
   getLocalDate,
   compare,
-  toggleLikeOf
+  toggleLikeOf,
+  deleteNoteOf
 }) => {
 
   useEffect(async () => {
@@ -40,6 +41,10 @@ const Notes = ({
             toggleLike={(event) => {
               event.stopPropagation();
               toggleLikeOf(note.id);
+            }}
+            deleteNote={(event) => {
+              event.stopPropagation();
+              deleteNoteOf(note.id);
             }}
           />
         )}

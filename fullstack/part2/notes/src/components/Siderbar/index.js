@@ -43,7 +43,7 @@ const Siderbar = ({ isOpen, handleOpen }) => {
           </SidebarItemWrap>
           <SidebarItemWrap
             icon={<HeartIcon />}
-            path="#"
+            path="/favorites"
             linkText="喜欢"
             handleClick={handleOpen}>
           </SidebarItemWrap>

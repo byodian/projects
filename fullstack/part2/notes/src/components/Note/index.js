@@ -4,13 +4,16 @@ import { NoteItem,
   NoteContentWrap,
   NoteTime,
   NoteContent,
-  NoteButtonGroup,
-  IconWrap
+  NoteGroup,
+  IconWrap,
+  IconGroup,
+  TagsWrap,
+  Tag
 } from './NoteElements';
 import { useHistory } from 'react-router-dom';
-import { FavoriteBorderIcon, FavoriteIcon } from '../StyledElements/Icon';
+import { FavoriteBorderIcon, FavoriteIcon, DeleteIcon, TagIcon } from '../StyledElements/Icon';
 
-const Note = ({ note, getLocalDate, toggleLike }) => {
+const Note = ({ note, getLocalDate, toggleLike, deleteNote }) => {
   const history = useHistory();
 
   // TODO
@@ -24,14 +27,31 @@ const Note = ({ note, getLocalDate, toggleLike }) => {
       <NoteContentWrap onClick={handleClick}>
         <NoteTime>{getLocalDate(note.date)}</NoteTime>
         <NoteContent>{parse(note.content)}</NoteContent>
-        <NoteButtonGroup>
-          <IconWrap>
-            {note.like
-              ? <FavoriteIcon onClick={toggleLike}></FavoriteIcon>
-              : <FavoriteBorderIcon onClick={toggleLike}></FavoriteBorderIcon>
+        <NoteGroup>
+          <TagsWrap>
+            {
+              note.tags.map((tag, index) => (
+                <Tag key={index} onClick={(event) => {
+                  event.stopPropagation();
+                }}>{tag}</Tag>
+              ))
             }
-          </IconWrap>
-        </NoteButtonGroup>
+          </TagsWrap>
+          <IconGroup>
+            <IconWrap>
+              {note.like
+                ? <FavoriteIcon onClick={toggleLike}></FavoriteIcon>
+                : <FavoriteBorderIcon onClick={toggleLike}></FavoriteBorderIcon>
+              }
+            </IconWrap>
+            <IconWrap>
+              <DeleteIcon onClick={deleteNote}></DeleteIcon>
+            </IconWrap>
+            <IconWrap>
+              <TagIcon></TagIcon>
+            </IconWrap>
+          </IconGroup>
+        </NoteGroup>
       </NoteContentWrap>
     </NoteItem>
   );

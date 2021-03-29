@@ -3,6 +3,15 @@ const jwt = require('jsonwebtoken');
 const Note = require('../models/note');
 const User = require('../models/user');
 
+const getDecodedToken = (token, response) => {
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET); 
+    return decodedToken;
+  } catch(exception) {
+    return response.status(401).json('invalid token');
+  }
+};
+
 notesRouter.get('/', async (request, response, next) => {
   try {
     const notes = await Note
@@ -30,37 +39,23 @@ notesRouter.get('/:id', async (request, response, next) => {
   }
 });
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-
-  return null;
-};
-
 notesRouter.post('/', async (request, response, next) => {
   const body = request.body;
-  const token = getTokenFrom(request);
+  const re = /\s*(?:;|,|\s|\.|$)\s*/g;
+  const tagsArray = body.tags ? body.tags.split(re) : ['未标记'];
 
-  if (!token) {
+  if (!request.token) {
     return response.status(401).json('token missing');
   }
-
-  let decodedToken;
-  try {
-    // eslint-disable-next-line
-    decodedToken = jwt.verify(token, process.env.SECRET); 
-  } catch(exception) {
-    return response.status(401).json('invalid token');
-  }  
+  const decodedToken = getDecodedToken(request.token, response);
 
   const user = await User.findById(decodedToken.id);
   const note = new Note({
     content: body.content,
     like: false,
     date: new Date(),
-    user: user._id
+    tags: tagsArray,
+    user: user._id,
   });
 
   try {
@@ -76,7 +71,6 @@ notesRouter.post('/', async (request, response, next) => {
 
 notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body;
-  console.log(body);
 
   const note = {
     content: body.content,
@@ -92,9 +86,24 @@ notesRouter.put('/:id', async (request, response, next) => {
 });
 
 notesRouter.delete('/:id', async (request, response, next) => {
+  const id = request.params.id;
+  if (!request.token) return response.status(401).json('token missing');
+
+  const decodedToken = getDecodedToken(request.token, response);
+  const userId = decodedToken.id.toString();
+
+  
   try {
-    await Note.findByIdAndRemove(request.params.id);
-    response.status(204).end();
+    const user = await User.findById(decodedToken.id);
+    const note = await Note.findById(id);
+    if (note.user && note.user.toString() === userId) {
+      await Note.findByIdAndRemove(id);
+      user.notes = user.notes.filter(n => n._id.toString() !== id.toString());
+      await user.save();
+      response.status(204).end();
+    } else {
+      response.status(400).end();
+    }
   } catch (exception) {
     next(exception);
   }

@@ -7,7 +7,7 @@ usersRouter.get('/', async (req, res, next) => {
   try {
     const users = await User
       .find({})
-      .populate('notes', { content: 1, date: 1, like: 1 });
+      .populate('notes', { content: 1, date: 1, like: 1, tags: 1 });
 
     res.json(users);
   } catch(exception) {
@@ -20,7 +20,7 @@ usersRouter.get('/:id', async (req, res, next) => {
 
   try {
     const user = await User.findById(id)
-      .populate('notes', { content: 1, date: 1 });
+      .populate('notes', { content: 1, date: 1, like: 1, tags: 1 });
 
     res.json(user);
   } catch(exception) {

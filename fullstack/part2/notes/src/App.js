@@ -47,6 +47,8 @@ const App = () => {
   const match = useRouteMatch('/notes/:id');
   const id = match ? match.params.id : null;
 
+  const favoriteNotes = notes.filter(n => n.like);
+
   const addNote = async (noteObject) => {
     try {
       const returnedNote = await noteService.create(noteObject);
@@ -68,6 +70,21 @@ const App = () => {
       handleNotes(notes.map(n => n.id !== id ? n : updatedNote));
     } catch(error) {
       handleMessage('更新失败', 'error');
+      removeMessage(2000);
+    }
+  };
+
+  const deleteNoteOf = async (id) => {
+    try {
+      if (window.confirm('此操作不可撤销，并且将从你的个人资料中移除此条笔记')) {
+        handleNotes(notes.filter(n => n.id !== id));
+        await noteService.remove(id);
+        handleMessage('删除成功', 'success');
+        removeMessage(2000);
+
+      }
+    } catch(error) {
+      handleMessage('删除失败', 'error');
       removeMessage(2000);
     }
   };
@@ -123,7 +140,13 @@ const App = () => {
     severity,
     getLocalDate,
     compare,
-    toggleLikeOf
+    toggleLikeOf,
+    deleteNoteOf
+  };
+
+  const favoriteNotesProps = {
+    ...notesProps,
+    notes: favoriteNotes,
   };
 
   const custom = {
@@ -137,7 +160,7 @@ const App = () => {
     show: modal.visibility
   };
 
-  const showNotesPage = () => (
+  const showNotesPage = (notesProps) => (
     <Container isOpen={sidebar.visibility}>
       <NotesContainer {...custom}>
         <Notes {...notesProps}>
@@ -164,8 +187,11 @@ const App = () => {
         <Route path="/notes/:id">
           {showDetailsPage()}
         </Route>
+        <Route path="/favorites">
+          { user ? showNotesPage(favoriteNotesProps) : null }
+        </Route>
         <Route path="/notes">
-          { user ? showNotesPage() : <Redirect to="/login" /> }
+          { user ? showNotesPage(notesProps) : null }
         </Route>
         <Route path="/login">
           { user === null ? loginPage() : <Redirect to="/notes" /> }

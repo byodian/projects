@@ -6,11 +6,13 @@ const initialNotes = [
     content: 'HTML is easy',
     date: new Date(),
     like: false,
+    tags: ['HTML']
   },
   {
     content: 'Browser can excute only JavaScript',
     date: new Date(),
-    like: true
+    like: true,
+    tags: ['Browser']
   }
 ];
 

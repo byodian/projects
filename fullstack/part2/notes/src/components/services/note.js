@@ -31,4 +31,14 @@ const update = (id, newObject) => {
   return request.then(response => response.data);
 };
 
-export default { getAll, getById, create, update, setToken };
+const remove = async (id) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  };
+
+  await axios.delete(`${baseUrl}/${id}`, config);
+};
+
+export default { getAll, getById, create, update, setToken, remove };

@@ -19,7 +19,7 @@ beforeEach(async () => {
     await noteObject.save();
   }
 });
-
+  
 describe('when there is initially some notes saved', () => {
   test('notes are returned as json', async () => {
     await api
@@ -72,40 +72,6 @@ describe('viewing a specific note', () => {
 });
 
 describe('addition of a new note', () => {
-  test('succeeds with valid data', async () => {
-    const newNote = {
-      content: 'async/await simplifies making async calls',
-      like: true,
-    };
-
-    const rootuser = {
-      username: 'root',
-      password: 'sekret'
-    };
-    
-    const response = await api
-      .post('/api/login')
-      .send(rootuser)
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    expect(response.body.username).toBe(rootuser.username);
-
-    await api
-      .post('/api/notes')
-      .send(newNote)
-      .set('Authorization', `bearer ${response.body.token}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    const notesAtEnd = await helper.notesInDb();
-    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
-
-    const contents = notesAtEnd.map(r => r.content);
-    expect(contents).toContain(
-      'async/await simplifies making async calls'
-    );
-  });
 
   test('fails with status code 400 if data is invaild', async () => {
     const newNote = {
@@ -148,25 +114,81 @@ describe('addition of a new note', () => {
     const notesAtEnd = await helper.notesInDb();
     expect(notesAtEnd).toHaveLength(notesAtStart.length);
   });
+
+  test('succeeds with valid data', async () => {
+    const newNote = {
+      content: 'async/await simplifies making async calls',
+      like: true,
+    };
+
+    const rootuser = {
+      username: 'root',
+      password: 'sekret'
+    };
+    
+    const response = await api
+      .post('/api/login')
+      .send(rootuser)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(response.body.username).toBe(rootuser.username);
+
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .set('Authorization', `bearer ${response.body.token}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const notesAtEnd = await helper.notesInDb();
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
+
+    const contents = notesAtEnd.map(r => r.content);
+    expect(contents).toContain(
+      'async/await simplifies making async calls'
+    );
+  });
 });
 
 describe('deletion of a note', () => {
+  let response;
+  beforeEach(async () => {
+    const newNote = {
+      content: 'async/await simplifies making async calls',
+      like: true,
+    };
+
+    const rootuser = {
+      username: 'root',
+      password: 'sekret'
+    };
+    
+    response = await api
+      .post('/api/login')
+      .send(rootuser)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .set('Authorization', `bearer ${response.body.token}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+  });
+
   test('succeeds with statuscode 204 if id is valid', async () => {
     const notesAtStart = await helper.notesInDb();
-    const noteToDelete = notesAtStart[0];
+    const noteToDelete = notesAtStart[2];
 
     await api
       .delete(`/api/notes/${noteToDelete.id}`)
+      .set('Authorization', `bearer ${response.body.token}`)
       .expect(204);
 
     const notesAtEnd = await helper.notesInDb();
-    
-    expect(notesAtEnd).toHaveLength(
-      helper.initialNotes.length - 1
-    );
-
     const contents = notesAtEnd.map(r => r.content);
-
     expect(contents).not.toContain(noteToDelete.content);
   });
 });

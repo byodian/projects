@@ -1,5 +1,12 @@
-import { FaTimes, FaPlus } from 'react-icons/fa';
-import { MdMenu, MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import {
+  MdMenu,
+  MdFavoriteBorder,
+  MdFavorite,
+  MdClear,
+  MdAdd,
+  MdLocalOffer
+} from 'react-icons/md';
+import { BiTrash } from 'react-icons/bi';
 import styled from 'styled-components';
 
 export const Icon = styled.div`
@@ -11,7 +18,7 @@ export const Icon = styled.div`
   font-size: 2rem;
 `;
 
-export const CloseIcon = styled(FaTimes)`
+export const CloseIcon = styled(MdClear)`
   width: 24px;
   height: 24px;
   cursor: pointer;
@@ -23,10 +30,10 @@ export const Hamburger = styled(MdMenu)`
   cursor: pointer;
 `;
 
-export const PlusIcon = styled(FaPlus)`
-  width: 15px;
-  height: 15px;
-  fill: var(--main-color);
+export const PlusIcon = styled(MdAdd)`
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
 `;
 
 export const FavoriteBorderIcon = styled(MdFavoriteBorder)`
@@ -35,4 +42,8 @@ export const FavoriteBorderIcon = styled(MdFavoriteBorder)`
 export const FavoriteIcon = styled(MdFavorite)`
   color: var(--color-red-03);
 `;
+
+export const DeleteIcon = styled(BiTrash)``;
+
+export const TagIcon = styled(MdLocalOffer)``;
 
