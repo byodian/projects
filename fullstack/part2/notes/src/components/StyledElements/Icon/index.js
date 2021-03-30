@@ -3,10 +3,10 @@ import {
   MdFavoriteBorder,
   MdFavorite,
   MdClear,
-  MdAdd,
-  MdLocalOffer
+  MdAdd
 } from 'react-icons/md';
 import { BiTrash } from 'react-icons/bi';
+import { BsTag, BsEye, BsEyeSlash } from 'react-icons/bs';
 import styled from 'styled-components';
 
 export const Icon = styled.div`
@@ -27,13 +27,11 @@ export const CloseIcon = styled(MdClear)`
 export const Hamburger = styled(MdMenu)`
   width: 24px;
   height: 24px;
-  cursor: pointer;
 `;
 
 export const PlusIcon = styled(MdAdd)`
   width: 24px;
   height: 24px;
-  color: var(--main-color);
 `;
 
 export const FavoriteBorderIcon = styled(MdFavoriteBorder)`
@@ -45,5 +43,9 @@ export const FavoriteIcon = styled(MdFavorite)`
 
 export const DeleteIcon = styled(BiTrash)``;
 
-export const TagIcon = styled(MdLocalOffer)``;
+export const TagIcon = styled(BsTag)``;
+
+export const EyeOpenedIcon = styled(BsEye)``;
+
+export const EyeHidedIcon = styled(BsEyeSlash)``;
 

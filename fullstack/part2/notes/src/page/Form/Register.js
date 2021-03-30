@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Input, Label } from '../../components/StyledElements/Input';
 import { useField } from '../../hooks';
 import { ExtendedButton } from './FormElements';
+import Password from '../../components/PasswordInput';
 
 const Register = ({ handleRegister }) => {
   const email = useField('email');
@@ -38,12 +39,7 @@ const Register = ({ handleRegister }) => {
       </div>
       <div className="md-margin-bottom">
         <Label htmlFor="password">密码</Label>
-        <Input
-          {...password}
-          id="password"
-          required
-          reset="password"
-        />
+        <Password password={password}></Password>
       </div>
       <div>
         <ExtendedButton id="login-button" type="submit">注册</ExtendedButton>

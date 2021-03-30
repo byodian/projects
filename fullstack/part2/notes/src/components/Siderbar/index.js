@@ -9,14 +9,18 @@ import {
   SidebarLink,
   SidebarMenu,
   SidebarWrap,
-  SidebarHamburgerIcon
+  SidebarHamburgerIcon,
+  DropdownMenu,
+  DropdownLink,
+  DropdownContent
 } from './SidebarElements';
-import { Hamburger } from '../StyledElements/Icon';
+import { Hamburger, TagIcon as TagIconButton } from '../StyledElements/Icon';
+import { HamburgerButton } from '../StyledElements/Button';
 
 const SidebarItemWrap = (props) => {
   return (
     <SidebarItem>
-      <SidebarLink to={props.path} onClick={props.handleClick}>
+      <SidebarLink to={props.path}>
         {props.icon}
         <span>{props.linkText}</span>
       </SidebarLink>
@@ -26,12 +30,14 @@ const SidebarItemWrap = (props) => {
   );
 };
 
-const Siderbar = ({ isOpen, handleOpen }) => {
+const Siderbar = ({ isOpen, handleOpen, tags }) => {
 
   return (
     <SidebarContainer isOpen={isOpen}>
       <SidebarHamburgerIcon>
-        <Hamburger onClick={handleOpen}/>
+        <HamburgerButton  onClick={handleOpen}>
+          <Hamburger></Hamburger>
+        </HamburgerButton>
       </SidebarHamburgerIcon>
       <SidebarWrap>
         <SidebarMenu>
@@ -39,19 +45,29 @@ const Siderbar = ({ isOpen, handleOpen }) => {
             icon={<HomeIcon />}
             linkText="全部"
             path="/notes"
-            handleClick={handleOpen}>
+          >
           </SidebarItemWrap>
           <SidebarItemWrap
             icon={<HeartIcon />}
             path="/favorites"
             linkText="喜欢"
-            handleClick={handleOpen}>
+          >
           </SidebarItemWrap>
           <SidebarItemWrap
             icon={<TagIcon />}
-            path="#"
+            path="/tags"
             linkText="书签"
-            handleClick={handleOpen}>
+          >
+            <DropdownMenu>
+              {tags.map(tag => (
+                <DropdownLink
+                  key={tag}
+                  to={`/tags/${tag}`}>
+                  <TagIconButton></TagIconButton>
+                  <DropdownContent>{tag}</DropdownContent>
+                </DropdownLink>
+              ))}
+            </DropdownMenu>
           </SidebarItemWrap>
         </SidebarMenu>
       </SidebarWrap>

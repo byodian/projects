@@ -18,11 +18,10 @@ const Notes = ({
 }) => {
 
   useEffect(async () => {
+    console.log(user);
     try {
-      const initialNotes = await noteService.getAll();
-      handleNotes(initialNotes
-        .filter(n => n.user.username === user.username)
-        .sort(compare));
+      const initialNotes = await noteService.getNotesByUser(user.username);
+      handleNotes(initialNotes.notes.sort(compare));
     } catch(error) {
       console.log(error.message);
     }

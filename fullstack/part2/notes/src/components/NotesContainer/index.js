@@ -6,7 +6,7 @@ import FloatingButton from '../FloatingButton';
 import { Main, Content, ContentWrap } from './NotesContainerElements';
 
 const NotesContainer = (props) => {
-  const { open, handleOpen, handleLogout, createNote, message, severity, show, handleShow } = props;
+  const { open, handleOpen, handleLogout, createNote, message, severity, show, handleShow, tags } = props;
   return (
     <>
       <Header
@@ -14,7 +14,7 @@ const NotesContainer = (props) => {
         handleClick={handleOpen}
       />
       <Main>
-        <Sidebar isOpen={open} handleOpen={handleOpen}/>
+        <Sidebar isOpen={open} handleOpen={handleOpen} tags={tags}/>
         <ContentWrap isOpen={open}>
           <Content>
             {props.children}

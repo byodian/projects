@@ -31,18 +31,13 @@ export const SidebarHamburgerIcon = styled(Icon)`
   }
 `;
 
-export const SidebarWrap = styled.div`
-`;
-
 export const SidebarMenu = styled.ul`
-
   @media screen and (min-width: 768px) {
     margin-top: var(--space-16); 
   }
 `;
-
-export const SidebarItem = styled.li`
-`;
+export const SidebarItem = styled.li``;
+export const SidebarWrap = styled.div``;
 
 export const SidebarLink = styled(Link)`
   display: flex;
@@ -52,15 +47,34 @@ export const SidebarLink = styled(Link)`
   margin-right: 1px;
   transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: var(--color-grey-01);
-  }
-
-  &:focus {
-    background-color: var(--color-grey-03);
-  }
-
   span {
     margin-left: var(--space-16);
   }
+
+  &:hover {
+    color: var(--main-color-highlight);
+
+    path {
+      fill: var(--main-color-highlight);
+    }
+  }
+`;
+
+export const DropdownMenu = styled.div``;
+
+export const DropdownLink = styled(Link)`
+  display: flex;
+  align-items: flex-end;
+  padding-top: var(--space-8);
+  padding-left: var(--space-32);
+  padding-bottom: var(--space-8);
+
+  &:hover {
+    color: var(--main-color-highlight);
+  }
+`;
+
+export const DropdownContent = styled.span`
+  margin-left: var(--space-8);
+  font-size: 1.4rem;  
 `;

@@ -20,7 +20,7 @@ export const Input = styled.input`
   }
 
   &:focus:invalid {
-    border-color: var(--main-color-highlight);
+    border-color: var(--color-td-primary);
   }
 
   &:focus:valid {

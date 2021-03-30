@@ -17,14 +17,6 @@ export const NoteContentWrap = styled.div`
     background-color: var(--color-grey-02);
   }
 
-  &:focus {
-    background-color: var(--color-grey-03);
-  }
-
-  a {
-      color: var(--color-tw-primary);
-  }
-
   ul {
     padding: 0 4.0rem;
     list-style-type: disc;
@@ -43,6 +35,7 @@ export const NoteTime = styled.time`
 export const NoteGroup = styled.div`
   display: flex;
   justify-content: flex-start;
+  cursor: auto;
 `;
 
 export const IconGroup = styled.div`
@@ -59,14 +52,12 @@ export const IconWrap = styled.div`
   border-radius: 50%;
   margin-right: var(--space-8);
   color: var(--main-color);
+  cursor: pointer;
 
 
   &:hover {
-    background-color: rgba(238, 82, 68, 0.1);
-  }
-
-  &:hover svg {
-    color: var(--color-red-03);
+    background-color: var(--main-color-highlight-01);
+    color: var(--main-color-highlight);
   }
 `;
 
@@ -79,8 +70,8 @@ export const Tag = styled(Link)`
   display: inline-flex;
   margin-right: var(--space-8);
   padding: var(--space-4) var(--space-8); 
-  background-color: var(--color-grey-02);
   border-radius: var(--radius-md);
-  color: var(--color-tw-primary);
+  color: var(--main-color-highlight);
+  background-color: var(--main-color-highlight-01);
 `;
 

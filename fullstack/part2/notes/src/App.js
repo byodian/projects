@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useResource, useMessage, useVisibility } from './hooks';
 import noteService from './components/services/note';
 import loginService from './components/services/login';
 import NoteForm from './components/NoteForm';
+import Overlay from './components/Overlay';
 import Login from './page/Form/Login';
 import Register from './page/Form/Register';
 import Form from './page/Form';
@@ -9,8 +11,7 @@ import Home from './page/Home';
 import Notes from './page/Notes';
 import Details from './page/Details';
 import NotesContainer from './components/NotesContainer';
-import { useResource, useMessage, useVisibility } from './hooks';
-import './assets/styles/main.scss';
+import Tags from './page/Tags';
 import { Container } from './AppElements';
 import {
   Switch,
@@ -19,19 +20,27 @@ import {
   useHistory,
   useRouteMatch
 } from 'react-router-dom';
+import './assets/styles/main.scss';
 
 const App = () => {
-  const [notes, { handleNotes }] = useResource([]);
+  const [notes, { handleResources: handleNotes }] = useResource([]);
   const [message, { handleMessage, removeMessage, severity }] = useMessage();
+  const [tags, { handleResources: handleTags }] = useResource([]);
   const [user, setUser] = useState(null);
   const modal = useVisibility(false);
   const sidebar = useVisibility(false);
   const history = useHistory();
 
-  const compare = (a, b) => {
-    if (a.date < b.date) return 1;
-    if (a.date > b.date) return -1;
-    return 0;
+  const helper = {
+    getAllNotes: user => note =>
+      note.user.username === user.username,
+    getFavoriteNotes: user => note =>
+      notes.user.username === user.username && note.like,
+    compare: (a, b) => {
+      if (a.date < b.date) return 1;
+      if (a.date > b.date) return -1;
+      return 0;
+    }
   };
 
   useEffect(() => {
@@ -47,12 +56,19 @@ const App = () => {
   const match = useRouteMatch('/notes/:id');
   const id = match ? match.params.id : null;
 
+  const tagMatch = useRouteMatch('/tags/:tag');
+  const tag = tagMatch ? tagMatch.params.tag : null;
+
+  // Get favorite notes
   const favoriteNotes = notes.filter(n => n.like);
+
+  // Get the notes of specific tag
+  const notesOfSpecificTag = notes.filter(n => n.tags.includes(tag));
 
   const addNote = async (noteObject) => {
     try {
       const returnedNote = await noteService.create(noteObject);
-      handleNotes(notes.concat(returnedNote).sort(compare));
+      handleNotes(notes.concat(returnedNote).sort(helper.compare));
       handleMessage('保存成功', 'success');
       removeMessage(2000);
     } catch(exception) {
@@ -110,7 +126,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser');
     setUser(null);
-    history.push('/login');
+    history.push('/');
   };
 
   const loginPage = () => (
@@ -139,14 +155,9 @@ const App = () => {
     message,
     severity,
     getLocalDate,
-    compare,
+    compare: helper.compare,
     toggleLikeOf,
     deleteNoteOf
-  };
-
-  const favoriteNotesProps = {
-    ...notesProps,
-    notes: favoriteNotes,
   };
 
   const custom = {
@@ -157,11 +168,16 @@ const App = () => {
     severity,
     createNote: addNote,
     handleShow: modal.handleVisibility,
-    show: modal.visibility
+    show: modal.visibility,
+    tags
   };
 
   const showNotesPage = (notesProps) => (
-    <Container isOpen={sidebar.visibility}>
+    <Container>
+      <Overlay
+        visibility={sidebar.visibility}
+        handleClick={sidebar.handleVisibility}
+      />
       <NotesContainer {...custom}>
         <Notes {...notesProps}>
           <NoteForm createNote={addNote} />
@@ -171,7 +187,11 @@ const App = () => {
   );
 
   const showDetailsPage = () => (
-    <Container isOpen={sidebar.visibility}>
+    <Container>
+      <Overlay
+        visibility={sidebar.visibility}
+        handleClick={sidebar.handleVisibility}
+      />
       <NotesContainer {...custom}>
         <Details
           id={id}
@@ -181,14 +201,35 @@ const App = () => {
     </Container>
   );
 
+  const showTagsPage = () => (
+    <Container>
+      <Overlay
+        visibility={sidebar.visibility}
+        handleClick={sidebar.handleVisibility}
+      />
+      <NotesContainer {...custom}>
+        <Tags
+          tags={tags}
+          handleTags={handleTags}
+        ></Tags>
+      </NotesContainer>
+    </Container>
+  );
+
   return (
     <>
       <Switch>
+        <Route path="/tags/:tag">
+          {user ? showNotesPage({ ...notesProps, notes: notesOfSpecificTag }) : null}
+        </Route>
+        <Route path="/tags">
+          {showTagsPage}
+        </Route>
         <Route path="/notes/:id">
           {showDetailsPage()}
         </Route>
         <Route path="/favorites">
-          { user ? showNotesPage(favoriteNotesProps) : null }
+          { user ? showNotesPage({ ...notesProps, notes: favoriteNotes }) : null }
         </Route>
         <Route path="/notes">
           { user ? showNotesPage(notesProps) : null }

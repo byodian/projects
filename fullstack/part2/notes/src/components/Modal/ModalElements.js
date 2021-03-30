@@ -7,12 +7,20 @@ export const ModalWrap = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--color-back-08);
   z-index: 401;
   overflow: auto;
   opacity: ${props => props.show ? '1' : '0'};
   visibility: ${props => props.show ? 'visible' : 'hidden'};
   transition: all 0.2s ease-in-out;
+`;
+
+export const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-back-08);
 `;
 
 export const IconWrap = styled(Icon)`
@@ -34,6 +42,8 @@ export const ModalCloseIcon = styled(CloseIcon)`
 `;
 
 export const ModalContent= styled.div`
+  // 子元素层叠上下文顺序比 overlay 组件高
+  position: relative;
   padding: var(--space-16);
   margin-top: var(--space-48);
 

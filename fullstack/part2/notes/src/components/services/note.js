@@ -8,8 +8,19 @@ const setToken = newToken => {
 };
 
 const getAll = () => {
-  const request = axios.get(baseUrl);
+  const config = {
+    headers: { Authorization: token },
+  };
+  const request = axios.get(baseUrl, config);
   return request.then(response => response.data);
+};
+
+const getNotesByUser = async (username) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const request = await axios.get(`/api/users/${username}`, config);
+  return request.data;
 };
 
 const getById = async (id) => {
@@ -41,4 +52,4 @@ const remove = async (id) => {
   await axios.delete(`${baseUrl}/${id}`, config);
 };
 
-export default { getAll, getById, create, update, setToken, remove };
+export default { getAll, getById, create, update, setToken, remove, getNotesByUser };

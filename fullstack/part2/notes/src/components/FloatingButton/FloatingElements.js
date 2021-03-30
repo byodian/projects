@@ -25,6 +25,7 @@ export const FloatingActionButton = styled.button`
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--color-grey-03);
+    background-color: var(--main-color-highlight-01);
+    color: var(--main-color-highlight);
   }
 `;

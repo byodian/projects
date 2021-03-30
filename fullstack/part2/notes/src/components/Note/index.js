@@ -27,13 +27,16 @@ const Note = ({ note, getLocalDate, toggleLike, deleteNote }) => {
       <NoteContentWrap onClick={handleClick}>
         <NoteTime>{getLocalDate(note.date)}</NoteTime>
         <NoteContent>{parse(note.content)}</NoteContent>
-        <NoteGroup>
+        <NoteGroup onClick={event => event.stopPropagation()}>
           <TagsWrap>
             {
               note.tags.map((tag, index) => (
-                <Tag key={index} onClick={(event) => {
-                  event.stopPropagation();
-                }}>{tag}</Tag>
+                <Tag
+                  key={index}
+                  onClick={(event) => event.stopPropagation()}
+                  to={`/tags/${tag}`}>
+                  {tag}
+                </Tag>
               ))
             }
           </TagsWrap>

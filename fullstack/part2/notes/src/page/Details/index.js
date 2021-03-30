@@ -16,7 +16,7 @@ const DetailsContent = ({ note, getLocalDate }) => {
 };
 
 const Details = ({ id, getLocalDate }) => {
-  const [note, { handleNotes }] = useResource(null);
+  const [note, { handleResources: handleNotes }] = useResource(null);
 
   useEffect(async () => {
     const returnedNote = await noteService.getById(id);

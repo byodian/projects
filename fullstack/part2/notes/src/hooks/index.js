@@ -47,12 +47,12 @@ export const useResource = (type) => {
   const [resources, setResources] = useState(type);
 
   // Initializing notes state when Notes page is firstly redered.
-  const handleNotes= notes => {
-    setResources(notes);
+  const handleResources = r => {
+    setResources(r);
   };
 
   const helper = {
-    handleNotes,
+    handleResources,
   };
 
   return [resources, helper];
