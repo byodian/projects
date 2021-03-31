@@ -36,6 +36,7 @@ export const NoteGroup = styled.div`
   display: flex;
   justify-content: flex-start;
   cursor: auto;
+  user-select: none;
 `;
 
 export const IconGroup = styled.div`

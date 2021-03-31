@@ -8,7 +8,7 @@ const NoteForm = ({ createNote }) => {
     event.preventDefault();
     createNote({
       content: text,
-      important: false
+      like: false
     });
     setText('');
   };

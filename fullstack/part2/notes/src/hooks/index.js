@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-export const useField = (type) => {
-  const [value, setValue] = useState('');
+export const useField = (type, fieldText='') => {
+  const [value, setValue] = useState(fieldText);
 
   const onChange = (event) => {
     setValue(event.target.value);
@@ -65,8 +65,13 @@ export const useVisibility = (bool) => {
     setVisibility(!visibility);
   };
 
+  const setHidden = () => {
+    setVisibility(false);
+  };
+
   return {
     visibility,
-    handleVisibility
+    handleVisibility,
+    setHidden
   };
 };

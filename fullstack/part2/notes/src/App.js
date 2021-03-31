@@ -10,7 +10,7 @@ import Form from './page/Form';
 import Home from './page/Home';
 import Notes from './page/Notes';
 import Details from './page/Details';
-import NotesContainer from './components/NotesContainer';
+import NotesContainer from './page/NotesContainer';
 import Tags from './page/Tags';
 import { Container } from './AppElements';
 import {
@@ -23,10 +23,10 @@ import {
 import './assets/styles/main.scss';
 
 const App = () => {
+  const [user, setUser] = useState(null);
   const [notes, { handleResources: handleNotes }] = useResource([]);
   const [message, { handleMessage, removeMessage, severity }] = useMessage();
   const [tags, { handleResources: handleTags }] = useResource([]);
-  const [user, setUser] = useState(null);
   const modal = useVisibility(false);
   const sidebar = useVisibility(false);
   const history = useHistory();
@@ -40,6 +40,12 @@ const App = () => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;
       return 0;
+    },
+    getLocalDate: (date) => {
+      const d = new Date(date);
+      const localTime = d.toLocaleTimeString('en', { hour12: false });
+      const localDate = d.toLocaleDateString('zh-cn').replace(/\//g, '-');
+      return `${localDate} ${localTime}`;
     }
   };
 
@@ -69,8 +75,6 @@ const App = () => {
     try {
       const returnedNote = await noteService.create(noteObject);
       handleNotes(notes.concat(returnedNote).sort(helper.compare));
-      handleMessage('保存成功', 'success');
-      removeMessage(2000);
     } catch(exception) {
       handleMessage('内容不能为空或字数不能少于八', 'error');
       removeMessage(2000);
@@ -97,10 +101,24 @@ const App = () => {
         await noteService.remove(id);
         handleMessage('删除成功', 'success');
         removeMessage(2000);
-
       }
     } catch(error) {
       handleMessage('删除失败', 'error');
+      removeMessage(2000);
+    }
+  };
+
+  const updateTagsOf = async (id, tags) => {
+    const note = notes.find(n => n.id === id);
+    const changedNote = { ...note, tags: tags };
+
+    try {
+      if (window.confirm('此操作将更新笔记标签')) {
+        const updatedNote = await noteService.update(id, changedNote);
+        handleNotes(notes.map(note => note.id !== id ? note : updatedNote));
+      }
+    } catch(error) {
+      handleMessage('更新失败', 'error');
       removeMessage(2000);
     }
   };
@@ -141,23 +159,17 @@ const App = () => {
     </Form>
   );
 
-  const getLocalDate = (date) => {
-    const d = new Date(date);
-    const localTime = d.toLocaleTimeString('en', { hour12: false });
-    const localDate = d.toLocaleDateString('zh-cn').replace(/\//g, '-');
-    return `${localDate} ${localTime}`;
-  };
-
   const notesProps = {
     notes,
     user,
     handleNotes,
     message,
     severity,
-    getLocalDate,
+    getLocalDate: helper.getLocalDate,
     compare: helper.compare,
     toggleLikeOf,
-    deleteNoteOf
+    deleteNoteOf,
+    updateTagsOf
   };
 
   const custom = {
@@ -176,7 +188,7 @@ const App = () => {
     <Container>
       <Overlay
         visibility={sidebar.visibility}
-        handleClick={sidebar.handleVisibility}
+        handleClick={sidebar.setHidden}
       />
       <NotesContainer {...custom}>
         <Notes {...notesProps}>
@@ -195,7 +207,7 @@ const App = () => {
       <NotesContainer {...custom}>
         <Details
           id={id}
-          getLocalDate={getLocalDate}
+          getLocalDate={helper.getLocalDate}
         />
       </NotesContainer>
     </Container>

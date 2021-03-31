@@ -4,7 +4,7 @@ export const Button = styled.button`
   display: inline-block;
   padding: 0.8rem 1.6rem;
   background-color: #333;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   font-size: var(--heading-sm-font-size);
   white-space: nowrap;
   min-width: 13rem;

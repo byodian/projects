@@ -14,11 +14,11 @@ const Notes = ({
   getLocalDate,
   compare,
   toggleLikeOf,
-  deleteNoteOf
+  deleteNoteOf,
+  updateTagsOf
 }) => {
 
   useEffect(async () => {
-    console.log(user);
     try {
       const initialNotes = await noteService.getNotesByUser(user.username);
       handleNotes(initialNotes.notes.sort(compare));
@@ -37,14 +37,9 @@ const Notes = ({
             key={note.id}
             note={note}
             getLocalDate={getLocalDate}
-            toggleLike={(event) => {
-              event.stopPropagation();
-              toggleLikeOf(note.id);
-            }}
-            deleteNote={(event) => {
-              event.stopPropagation();
-              deleteNoteOf(note.id);
-            }}
+            toggleLike={() => toggleLikeOf(note.id)}
+            deleteNote={() => deleteNoteOf(note.id)}
+            updateTagsOf={updateTagsOf}
           />
         )}
       </NoteItems>

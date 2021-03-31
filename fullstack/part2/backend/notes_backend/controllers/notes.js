@@ -1,28 +1,21 @@
 const notesRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 const Note = require('../models/note');
 const User = require('../models/user');
+const { getDecodedToken } = require('../utils/helper');
 
-const getDecodedToken = (token, response) => {
-  try {
-    const decodedToken = jwt.verify(token, process.env.SECRET); 
-    return decodedToken;
-  } catch(exception) {
-    return response.status(401).json('invalid token');
-  }
-};
+if (process.env.MODE_ENV !== 'production') {
+  notesRouter.get('/', async (request, response, next) => {
+    try {
+      const notes = await Note
+        .find({})
+        .populate('user', { username: 1, name: 1 });
 
-notesRouter.get('/', async (request, response, next) => {
-  try {
-    const notes = await Note
-      .find({})
-      .populate('user', { username: 1, name: 1 });
-
-    response.json(notes.map(note => note.toJSON()));
-  } catch (error) {
-    next(error);
-  }
-});
+      response.json(notes.map(note => note.toJSON()));
+    } catch (error) {
+      next(error);
+    }
+  });
+}
 
 notesRouter.get('/:id', async (request, response, next) => {
   try {
@@ -47,9 +40,10 @@ notesRouter.post('/', async (request, response, next) => {
   if (!request.token) {
     return response.status(401).json('token missing');
   }
-  const decodedToken = getDecodedToken(request.token, response);
 
+  const decodedToken = getDecodedToken(request.token);
   const user = await User.findById(decodedToken.id);
+  
   const note = new Note({
     content: body.content,
     like: false,
@@ -57,7 +51,7 @@ notesRouter.post('/', async (request, response, next) => {
     tags: tagsArray,
     user: user._id,
   });
-
+  
   try {
     const savedNote = await note.save();
     user.notes = user.notes.concat(savedNote._id);
@@ -71,10 +65,13 @@ notesRouter.post('/', async (request, response, next) => {
 
 notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body;
+  const re = /\s*(?:;|,|\s|\.|$)\s*/g;
+  const tagsArray = Array.isArray(body.tags) ? body.tags : body.tags.split(re);
 
   const note = {
     content: body.content,
-    like: body.like
+    like: body.like,
+    tags: tagsArray
   };
 
   try {

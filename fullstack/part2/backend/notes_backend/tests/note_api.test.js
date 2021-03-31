@@ -197,10 +197,11 @@ describe('updating a specific note', () => {
   test('succeeds with statuscode 200 if id is valid', async () => {
     const notesAtStart = await helper.notesInDb();
     const noteToChange = notesAtStart[0];
-    
+    console.log(noteToChange);
     const newNote = {
-      content: 'JavaScript is hard',
-      like: true
+      ...noteToChange,
+      like: true,
+      tags: 'good,idea'
     };
 
     const resultNote = await api
@@ -210,8 +211,8 @@ describe('updating a specific note', () => {
       .expect('Content-Type', /json/);
 
     const notesAtEnd = await helper.notesInDb();
-
     const processedNoteToChange = JSON.parse(JSON.stringify(notesAtEnd[0]));
+    console.log(processedNoteToChange);
     expect(resultNote.body).toEqual(processedNoteToChange);
   });
 });

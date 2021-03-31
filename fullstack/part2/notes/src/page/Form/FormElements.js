@@ -8,7 +8,7 @@ export const Heading = styled.h1`
 `;
 
 export const ExtendedLink = styled(Link)`
-  color: var(--main-color-highlight);
+  color: var(--color-red-06);
 `;
 
 export const LogoContainer = styled.div`
