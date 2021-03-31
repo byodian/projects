@@ -34,7 +34,7 @@ const Home = () => {
             </HeroWrapper>
             <div>
               <img src={Hero} alt="使用 onebox 想记就记"/>
-              <img src={Placeholder} alt="使用 onebox 想记就记"/>
+              <img className="placeholder-img" src={Placeholder} alt="使用 onebox 想记就记"/>
             </div>
           </HeroSection>
         </Container>
