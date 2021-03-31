@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import { Button } from '../../components/StyledElements/Button';
 import { Link } from 'react-router-dom';
 import Hero from '../../assets/svg/hero.svg';
-import Placeholder from '../../assets/svg/placeholder.svg';
+import Placeholder from '../../assets/svg/placeholder.png';
 import Feature1 from '../../assets/svg/feature_1.svg';
 import Feature2 from '../../assets/svg/feature_2.svg';
 import Feature3 from '../../assets/svg/feature_3.svg';

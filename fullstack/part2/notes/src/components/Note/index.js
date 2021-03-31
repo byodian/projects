@@ -33,7 +33,6 @@ const Note = ({ note, getLocalDate, toggleLike, deleteNote, updateTagsOf }) => {
 
   const handleSubmit = () => {
     updateTagsOf(note.id, tagsState.value);
-    tagsState.reset();
     tagsVisibility.handleVisibility();
   };
 
