@@ -56,7 +56,7 @@ const Siderbar = ({ isOpen, handleOpen, tags }) => {
           <SidebarItemWrap
             icon={<TagIcon />}
             path="/tags"
-            linkText="书签"
+            linkText="标签"
           >
             <DropdownMenu>
               {tags.map(tag => (
