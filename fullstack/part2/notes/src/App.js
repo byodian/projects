@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useResource, useMessage, useVisibility } from './hooks';
 import noteService from './components/services/note';
 import loginService from './components/services/login';
+import userService from './components/services/user';
 import NoteForm from './components/NoteForm';
 import Overlay from './components/Overlay';
 import Login from './page/Form/Login';
@@ -75,9 +76,11 @@ const App = () => {
     try {
       const returnedNote = await noteService.create(noteObject);
       handleNotes(notes.concat(returnedNote).sort(helper.compare));
+      handleMessage('保存成功', 'success');
+      removeMessage(1000);
     } catch(exception) {
       handleMessage('内容不能为空或字数不能少于八', 'error');
-      removeMessage(2000);
+      removeMessage(5000);
     }
   };
 
@@ -100,7 +103,7 @@ const App = () => {
         handleNotes(notes.filter(n => n.id !== id));
         await noteService.remove(id);
         handleMessage('删除成功', 'success');
-        removeMessage(2000);
+        removeMessage(1000);
       }
     } catch(error) {
       handleMessage('删除失败', 'error');
@@ -131,30 +134,41 @@ const App = () => {
       noteService.setToken(user.token);
       handleMessage('登录成功', 'success');
       removeMessage(2000);
+      history.push('/notes');
     } catch (exception) {
       handleMessage('用户名或密码不正确', 'error');
-      removeMessage(4000);
+      removeMessage(5000);
     }
   };
-
-  const register = () => {
-    console.log(123);
+  // eslint-disable-next-line
+  const register = async (newUser) => {
+    try {
+      const user = await userService.create(newUser);
+      handleMessage(`用户 ${user.username} 注册成功，请登录！`, 'success');
+      removeMessage(2000);
+      history.push('/login');
+    } catch(error) {
+      handleMessage('您输入的邮箱地址或用户名已被使用', 'error');
+      console.dir(error);
+      removeMessage(5000);
+    }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser');
     setUser(null);
+    handleTags([]);
     history.push('/');
   };
 
   const loginPage = () => (
-    <Form heading="登录" message={message}>
-      <Login handleLogin={login}/>
+    <Form heading="登录" message={message} severity={severity} >
+      <Login handleLogin={login} />
     </Form>
   );
 
   const registerPage = () => (
-    <Form message={message} heading="注册">
+    <Form message={message} heading="注册" severity={severity}>
       <Register handleRegister={register}/>
     </Form>
   );
@@ -221,6 +235,7 @@ const App = () => {
       />
       <NotesContainer {...custom}>
         <Tags
+          user={user}
           tags={tags}
           handleTags={handleTags}
         ></Tags>
@@ -232,10 +247,10 @@ const App = () => {
     <>
       <Switch>
         <Route path="/tags/:tag">
-          {user ? showNotesPage({ ...notesProps, notes: notesOfSpecificTag }) : null}
+          { user ? showNotesPage({ ...notesProps, notes: notesOfSpecificTag }) : null }
         </Route>
         <Route path="/tags">
-          {showTagsPage}
+          {user ? showTagsPage : null }
         </Route>
         <Route path="/notes/:id">
           {showDetailsPage()}
@@ -244,7 +259,7 @@ const App = () => {
           { user ? showNotesPage({ ...notesProps, notes: favoriteNotes }) : null }
         </Route>
         <Route path="/notes">
-          { user ? showNotesPage(notesProps) : null }
+          { user ? showNotesPage(notesProps) : <Redirect to="/login" /> }
         </Route>
         <Route path="/login">
           { user === null ? loginPage() : <Redirect to="/notes" /> }

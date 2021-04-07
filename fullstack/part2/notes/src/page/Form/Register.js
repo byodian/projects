@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Input, Label } from '../../components/StyledElements/Input';
 import { useField } from '../../hooks';
 import { ExtendedButton } from './FormElements';
@@ -9,12 +8,14 @@ const Register = ({ handleRegister }) => {
   const email = useField('email');
   const username = useField('text');
   const password = useField('password');
-  const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleRegister();
-    history.push('/login');
+    handleRegister({
+      email: email.value,
+      username: username.value,
+      password: password.value
+    });
   };
 
   return (

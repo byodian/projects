@@ -10,7 +10,7 @@ import {
   ExtendedLink
 } from './FormElements';
 
-const Form = ({ heading, message, children }) => {
+const Form = ({ severity, heading, message, children }) => {
   return (
     <Container>
       <LogoContainer>
@@ -18,7 +18,7 @@ const Form = ({ heading, message, children }) => {
       </LogoContainer>
       <FormContainer>
         <Heading>{heading}</Heading>
-        <Alert error message={message}>{message}</Alert>
+        <Alert severity={severity} message={message}>{message}</Alert>
         {children}
         <BreakLine></BreakLine>
         <div className="md-margin-top text-align-center sm1-font-size">

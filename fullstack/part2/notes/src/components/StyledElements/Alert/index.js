@@ -6,6 +6,7 @@ const Alert = styled.p`
   font-size: 1.2rem;
   border-radius: var(--radius-sm);
   text-align: center;
+  letter-spacing: 1px;
   
   ${props =>
     props.severity === 'error' &&

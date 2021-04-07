@@ -1,34 +1,31 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Input, Label } from '../../components/StyledElements/Input';
 import { useField } from '../../hooks';
 import { ExtendedButton } from './FormElements';
 import Password from '../../components/PasswordInput';
 
 const Login = ({ handleLogin }) => {
-  const username = useField('text');
+  const email = useField('email');
   const password = useField('password');
-  const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     handleLogin({
-      username: username.value,
+      email: email.value,
       password: password.value
     });
-    history.push('/notes');
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div className="md-margin-bottom">
-          <Label htmlFor="username">用户名</Label>
+          <Label htmlFor="email">邮箱地址</Label>
           <Input
-            {...username}
-            id="username"
+            {...email}
+            id="email"
             required
-            reset="username"
+            reset="email"
           />
         </div>
         <div className="md-margin-bottom">

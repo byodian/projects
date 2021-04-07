@@ -10,11 +10,8 @@ import {
   SidebarMenu,
   SidebarWrap,
   SidebarHamburgerIcon,
-  DropdownMenu,
-  DropdownLink,
-  DropdownContent
 } from './SidebarElements';
-import { Hamburger, TagIcon as TagIconButton } from '../StyledElements/Icon';
+import { Hamburger } from '../StyledElements/Icon';
 import { HamburgerButton } from '../StyledElements/Button';
 
 const SidebarItemWrap = (props) => {
@@ -30,7 +27,7 @@ const SidebarItemWrap = (props) => {
   );
 };
 
-const Siderbar = ({ isOpen, handleOpen, tags }) => {
+const Siderbar = ({ isOpen, handleOpen }) => {
 
   return (
     <SidebarContainer isOpen={isOpen}>
@@ -58,16 +55,6 @@ const Siderbar = ({ isOpen, handleOpen, tags }) => {
             path="/tags"
             linkText="标签"
           >
-            <DropdownMenu>
-              {tags.map(tag => (
-                <DropdownLink
-                  key={tag}
-                  to={`/tags/${tag}`}>
-                  <TagIconButton></TagIconButton>
-                  <DropdownContent>{tag}</DropdownContent>
-                </DropdownLink>
-              ))}
-            </DropdownMenu>
           </SidebarItemWrap>
         </SidebarMenu>
       </SidebarWrap>
