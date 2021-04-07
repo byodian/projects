@@ -5,6 +5,9 @@ import loginService from './components/services/login';
 import userService from './components/services/user';
 import NoteForm from './components/NoteForm';
 import Overlay from './components/Overlay';
+import DefaultPage from './components/DefaultPage';
+import { ReactComponent as DefaultHomeSvg } from './assets/svg/defaultHome.svg';
+import { ReactComponent as DefaultTagsSvg } from './assets/svg/defaultTags.svg';
 import Login from './page/Form/Login';
 import Register from './page/Form/Register';
 import Form from './page/Form';
@@ -206,7 +209,14 @@ const App = () => {
       />
       <NotesContainer {...custom}>
         <Notes {...notesProps}>
-          <NoteForm createNote={addNote} />
+          {
+            notes.length > 0
+              ? <NoteForm createNote={addNote} />
+              : <div>
+                <NoteForm createNote={addNote} />
+                <DefaultPage icon={<DefaultHomeSvg />} text="写点什么吧？" />
+              </div>
+          }
         </Notes>
       </NotesContainer>
     </Container>
@@ -239,6 +249,10 @@ const App = () => {
           tags={tags}
           handleTags={handleTags}
         ></Tags>
+        {notes.length > 0
+          ? null
+          : <DefaultPage icon={<DefaultTagsSvg />} text="还没有标签" />
+        }
       </NotesContainer>
     </Container>
   );
