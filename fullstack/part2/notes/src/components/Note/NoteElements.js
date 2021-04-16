@@ -8,7 +8,7 @@ export const NoteItem = styled.li`
 export const NoteContentWrap = styled.div`
   display: block;
   padding: var(--space-16);
-  background-color: #fff;
+  background-color: var(--color-base-white);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;

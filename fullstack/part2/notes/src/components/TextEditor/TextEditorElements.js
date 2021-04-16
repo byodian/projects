@@ -2,15 +2,23 @@ import styled from 'styled-components';
 import { Button } from '../StyledElements/Button';
 
 export const EditorContainer = styled.div`
-  position: relative;
+  display: flex;
+  flex-direction: column;
   margin-bottom: var(--space-32);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  background-color: var(--color-base-white);
 `;
 
 export const SubmitButton = styled(Button)`
-  position: absolute;
-  bottom: var(--space-8); 
-  right: var(--space-32);
-  min-width: 4rem;
-  padding: var(--space-4);
+  min-width: 6rem;
+  padding: var(--space-4) var(--space-8);
+  margin-top: var(--space-16);
   font-size: 1.2rem;
+  margin-left: auto;
+  
+  // right align
+  @media screen and (min-width: 420px) {
+    padding: var(--space-8) var(--space-16);
+  }
 `;
